@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从视频扩散模型到可交互世界模型的技术演进笔记。">
+  <title>视频生成模型如何走向世界模型 | Jiajun Peng</title>
+  <link rel="stylesheet" href="../notes.css">
+</head>
+<body><main>
+<header class="site-header">
+  <a class="wordmark" href="../index.html">Jiajun<span>.</span></a>
+  <nav aria-label="Primary navigation"><a href="../index.html#about">About</a><a href="../index.html#research">Research</a><a href="../notes.html">Notes</a><a href="https://github.com/KevinJustin-love" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
+</header>
+<header class="note-hero">
+  <div class="eyebrow">Notes / Video Models</div>
+  <h1>视频生成模型如何走向世界模型</h1>
+  <p class="note-meta">从时空扩散、Video DiT 到可交互、可规划、可记忆的世界模型｜更新于 2026-09-12</p>
+</header>
+<article class="note-content">
+<blockquote><p>这篇短笔记按“瓶颈 → 方法 → 代价 → 下一步”组织。模型榜单必须注明任务、分辨率、时长、音频和评测日期；不存在跨任务的单一总榜。</p></blockquote>
+
+<h2>1. 为什么视频比图像难</h2>
+<p>视频生成不仅要让每一帧看起来真实，还要让身份、遮挡、运动和物理关系跨帧保持一致。视频 latent 的 token 数近似为 <code>N=T×H×W</code>，标准全注意力的成本是 <code>O(N²)</code>。因此每次架构跃迁都在回答一个新的问题：如何压缩表示、如何建模时间、如何控制长程记忆，以及如何让动作真的改变未来。</p>
+
+<h2>2. 发展脉络</h2>
+<table>
+<thead><tr><th>阶段</th><th>当时的瓶颈</th><th>代表方法</th><th>带来的变化</th></tr></thead>
+<tbody>
+<tr><td>2019–21</td><td>逐像素序列太长，视频难以自回归</td><td>VideoGPT、DVD-GAN、VQ-VAE</td><td>把视频转为离散 token，但分辨率和采样速度有限</td></tr>
+<tr><td>2022–23</td><td>离散自回归画质不足</td><td>Make-A-Video、Imagen Video、Video LDM、Lumiere</td><td>图像扩散迁移到时空 U-Net，短片质量明显提升</td></tr>
+<tr><td>2024</td><td>如何靠规模统一空间和时间</td><td>Sora、CogVideoX、HunyuanVideo</td><td>3D-VAE + Video DiT 成为主流；训练规模扩大</td></tr>
+<tr><td>2024–25</td><td>开源、多任务和部署成本</td><td>Wan、Step-Video、Hailuo-02</td><td>Flow Matching、深压缩 VAE、Video-DPO 和产品级后训练</td></tr>
+<tr><td>2025–26</td><td>长视频显存、误差累积和音画同步</td><td>SANA-Video、SkyReels、HunyuanVideo 1.5、Self-Forcing</td><td>线性/滑窗注意力、蒸馏、级联超分和流式生成</td></tr>
+<tr><td>2026</td><td>生成结果是否可交互、可规划、可记忆</td><td>Genie、LingBot、Epona、Endless World、WorldWeaver</td><td>动作条件、3D 状态、MoE、SSM 和显式世界状态进入模型</td></tr>
+</tbody>
+</table>
+
+<h2>3. 几个关键分叉</h2>
+<h3>Genie：从“生成片段”到“生成环境”</h3>
+<p><a href="https://arxiv.org/abs/2402.15391">Genie</a> 用时空 tokenizer、无监督 latent-action model 和自回归 dynamics，从没有动作标签的游戏视频中学习逐帧可控的环境。它的目标是回答“按下动作后会发生什么”，所以不同于一次性采样整段视频的 T2V 模型；代价是 rollout 慢、视觉分辨率较低。</p>
+
+<h3>HunyuanVideo 与 Wan：Video DiT 的开源化</h3>
+<p><a href="https://arxiv.org/abs/2412.03603">HunyuanVideo</a> 用 causal 3D-VAE、MLLM 文本编码和 dual-stream → single-stream DiT 提升文本对齐与运动质量。<a href="https://arxiv.org/abs/2503.20314">Wan</a> 以 Wan-VAE、Flow Matching 和多任务条件统一 T2V、I2V、V2V；1.3B 版本降低部署门槛，14B 版本追求质量。两者都受全时空注意力的长视频成本限制。</p>
+
+<h3>SANA-Video：用线性注意力换取长度和速度</h3>
+<p><a href="https://arxiv.org/abs/2509.24695">SANA-Video</a> 将注意力重写为线性形式，并通过 block-wise KV state 支持分钟级视频；SANA-Video 2.0 再加入 softmax anchor 和 DMD 四步蒸馏。它解决显存和延迟问题，代价是线性近似对精细远程对应的表达能力较弱。</p>
+
+<h3>2025–26：生成未来并支持规划</h3>
+<p><a href="https://arxiv.org/abs/2502.10248">Step-Video-T2V</a> 使用深压缩 Video-VAE、3D DiT、Flow Matching 和 Video-DPO；<a href="https://arxiv.org/abs/2511.18870">HunyuanVideo 1.5</a> 用选择性滑窗注意力和级联超分降低成本；<a href="https://arxiv.org/abs/2506.24113">Epona</a> 将 latent dynamics、未来视频和车辆轨迹解耦；<a href="https://arxiv.org/abs/2607.07675">LingBot-Video</a> 用 MoE DiT、机器人数据和物理/任务奖励把视觉生成推进到具身智能。</p>
+
+<h2>4. 近期模型对照</h2>
+<table>
+<thead><tr><th>模型</th><th>核心架构取舍</th><th>适合回答的问题</th></tr></thead>
+<tbody>
+<tr><td>Veo 3.1 / Sora 2 Pro / Seedance 2.0</td><td>闭源大规模视频基础模型，部分版本原生音频</td><td>综合视觉质量、叙事和音画同步</td></tr>
+<tr><td>Hailuo-02 / MiniMax H3</td><td>NCR、统一多模态上下文、参考图和音频</td><td>产品工作流中的真实感与生成速度</td></tr>
+<tr><td>Wan / HunyuanVideo</td><td>开放权重 Video DiT + 3D-VAE / Flow Matching</td><td>复现、微调和本地部署</td></tr>
+<tr><td>SANA-Video 2.0</td><td>线性注意力 + softmax anchor + 四步蒸馏</td><td>低显存与分钟级生成</td></tr>
+<tr><td>LingBot / Epona / WorldWeaver</td><td>MoE、动作条件、轨迹或显式 world-state</td><td>交互、规划和多智能体状态</td></tr>
+</tbody>
+</table>
+
+<h2>5. Xun Huang 的世界模型视角</h2>
+<p><a href="https://www.xunhuang.me/blogs/world_model.html">Xun Huang 的 From Video Generation to Video World Models</a> 提供了一个有用的能力分层：<em>faithfulness</em>（逼真）、<em>interactivity</em>（动作可控）、<em>planning</em>（可评估轨迹）和 <em>statefulness</em>（保持隐藏状态）。这说明 VBench 或人类美学分数不能单独证明世界模型能力。进一步的架构路线包括 Self-Forcing、SSM 长上下文、VRAG 全局状态、3D 几何桥接和可修正的内部状态。</p>
+<p>延伸阅读：<a href="https://arxiv.org/abs/2505.20171">Long-Context State-Space Video World Models</a>、<a href="https://arxiv.org/abs/2505.21996">Learning World Models for Interactive Video Generation</a>、<a href="https://arxiv.org/abs/2512.12430">Endless World</a>、<a href="https://arxiv.org/abs/2608.30692">Can Video World Models Track Unobserved World States?</a>。</p>
+
+<h2>6. 怎样读榜单</h2>
+<p>截至 2026-09-12，公开榜单通常把 Veo 3.1、Sora 2 Pro、Seedance 2.0、Kling 3 和 MiniMax H3 放在闭源第一梯队候选；开放权重应分别看 Wan/Hunyuan 的质量、SANA 的效率以及 LingBot 的具身能力。比较时至少记录任务（T2V/I2V）、分辨率、时长、是否带音频、投票量和发布日期。</p>
+
+<h2>论文入口</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2402.15391">Genie</a> · <a href="https://arxiv.org/abs/2412.03603">HunyuanVideo</a> · <a href="https://arxiv.org/abs/2503.20314">Wan</a></li>
+<li><a href="https://arxiv.org/abs/2509.24695">SANA-Video</a> · <a href="https://arxiv.org/abs/2607.07675">LingBot-Video</a> · <a href="https://arxiv.org/abs/2602.21818">SkyReels-V4</a></li>
+</ul>
+</article>
+<footer><a class="footer-wordmark" href="../index.html">Jiajun<span>.</span></a><span>World Models · Embodied Intelligence</span><a href="../notes.html">All notes ↗</a></footer>
+</main></body></html>
