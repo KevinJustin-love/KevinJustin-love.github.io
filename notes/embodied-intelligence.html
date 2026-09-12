@@ -9,7 +9,7 @@
 </head>
 <body><main>
   <header class="site-header"><a class="wordmark" href="../index.html">Jiajun<span>.</span></a><nav aria-label="Primary navigation"><a href="../index.html#about">About</a><a href="../index.html#research">Research</a><a href="../notes.html">Notes</a><a href="https://github.com/KevinJustin-love" target="_blank" rel="noreferrer">GitHub ↗</a></nav></header>
-  <header class="note-hero"><div class="eyebrow">Notes / Research</div><h1>具身智能发展笔记</h1><p class="note-meta">RT-2、π 系列、Code-as-Policy、WAM、小米模型与 GPT-6 Astra · 更新至 2026-09-12</p></header>
+  <header class="note-hero"><div class="eyebrow">Notes / Research</div><h1>具身智能发展笔记</h1><p class="note-meta">RT-2、π 系列、Code-as-Policy、WAM、工业界实施路径与 GPT-6 Astra · 更新至 2026-09-12</p></header>
   <article class="note-content">
     <p>具身智能不是一条从 RT-2 线性走向某个“终局模型”的路线。当前更适合并行理解三种能力：视觉语言动作模型（VLA）负责把观测和指令映射为动作；世界—动作模型（WAM）预测动作会带来的未来；Code-as-Policy 让通用模型生成可以调用机器人 API 的程序。</p>
     <div class="note-diagram" role="img" aria-label="三条具身智能路线的关系"><div><strong>VLA</strong><span>视觉 + 语言 → 动作</span></div><div><strong>WAM</strong><span>视频未来 ↔ 动作</span></div><div><strong>Code-as-Policy</strong><span>语言 → 程序 → API</span></div></div>
@@ -43,15 +43,10 @@
           future video latents + executable actions</code></pre>
     <p>它的关键价值是将世界模型变成动作选择的中间约束；但视频逼真不代表动作一定可执行，真实动力学和 OOD 评测仍然重要。</p>
     <p class="source-note"><a href="https://openwam-official.github.io/">OpenWAM 官方页面</a> · <a href="https://arxiv.org/abs/2609.07398">OpenWAM 论文</a></p>
-    <h2>5. 小米具身模型谱系</h2>
-    <table><thead><tr><th>模型</th><th>定位</th><th>阅读重点</th></tr></thead><tbody>
-      <tr><td>MiMo-Embodied</td><td>具身 VLM</td><td>任务规划、空间理解、可供性和具身推理。</td></tr>
-      <tr><td>Xiaomi-Robotics-0</td><td>VLA</td><td>VLM 知识保留、flow matching、异步执行和实时动作。</td></tr>
-      <tr><td>Xiaomi-Robotics-U0</td><td>世界模型</td><td>多视角场景生成、视频预测、具身迁移和数据增强。</td></tr>
-      <tr><td>Xiaomi-Robotics-1</td><td>机器人基座模型</td><td>超过十万小时 UMI 轨迹预训练和跨任务泛化。</td></tr>
-    </tbody></table>
-    <p class="source-note"><a href="https://arxiv.org/abs/2511.16518">MiMo-Embodied</a> · <a href="https://arxiv.org/abs/2602.12684">Xiaomi-Robotics-0</a> · <a href="https://arxiv.org/abs/2607.11643">Xiaomi-Robotics-U0</a> · <a href="https://arxiv.org/abs/2607.15330">Xiaomi-Robotics-1</a></p>
-    <h2>6. 截至 2026-09-12 的榜单读法</h2>
+<h2>5. 工业界实施路径</h2>
+    <p>工业界的公开路线通常把具身理解、动作生成、世界模型和部署工程组合起来。腾讯混元 HY-Embodied / HyVLA-0.5 关注 MoT 视觉推理、flow-matching 动作专家和从数据采集到 RL 的完整栈；阿里通义 Qwen-VLA 将视觉语言骨干扩展到 DiT 连续动作，并统一操作、导航和轨迹预测；字节 GR-2 代表视频预训练先验迁移到机器人控制。</p>
+    <p>小米则同时覆盖三层：MiMo-Embodied 负责具身 VLM 理解，Xiaomi-Robotics-0 负责实时 VLA，Xiaomi-Robotics-U0 负责世界生成与数据增强，Xiaomi-Robotics-1 以大规模 UMI 轨迹训练机器人基座。不同模型的结果必须绑定具体基准和日期。</p>
+    <p class="source-note"><a href="https://arxiv.org/abs/2604.07430">HY-Embodied</a> · <a href="https://arxiv.org/abs/2605.30280">Qwen-VLA</a> · <a href="https://arxiv.org/abs/2410.06158">GR-2</a> · <a href="https://arxiv.org/abs/2602.12684">Xiaomi-Robotics-0</a> · <a href="https://arxiv.org/abs/2607.11643">Xiaomi-Robotics-U0</a> · <a href="https://arxiv.org/abs/2607.15330">Xiaomi-Robotics-1</a></p>    <h2>6. 截至 2026-09-12 的榜单读法</h2>
     <p>“榜首”必须绑定基准、版本和日期。RoboCasa365 官方榜单在 2026-09-10 显示 Xiaomi-Robotics-1 为第一（57.4）；RoboDojo 当前榜单的第一是 DM0.5（24.90），Xiaomi-Robotics-1 约为 20.07；WorldArena 2.0 Track 1 的第一是 FlowWAM-FiveAges（67.62），Xiaomi-Robotics-U0 为 67.39。不同赛道不能合并成一个总排名。</p>
     <p class="source-note"><a href="https://robocasa.ai/leaderboard.html">RoboCasa365</a> · <a href="https://robodojo-benchmark.com/">RoboDojo</a> · <a href="https://huggingface.co/spaces/WorldArena/WorldArena2.0/blob/main/RESULTS_README.md">WorldArena 2.0</a></p>
     <h2>7. GPT-6 Astra：通用模型进入控制环</h2>
