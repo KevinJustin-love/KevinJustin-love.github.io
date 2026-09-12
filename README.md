@@ -10,7 +10,6 @@ The site introduces my research interests in:
 - Embodied intelligence
 - Vision-language-action models
 - Spatial intelligence
-- Video understanding and multimodal learning
 
 ## Design
 
@@ -36,3 +35,4 @@ The site is deployed through GitHub Pages from the main branch and the repositor
 - Website: https://kevinjustin-love.github.io/
 - GitHub profile: https://github.com/KevinJustin-love
 - Email: mailto:pjj2006@mail.ustc.edu.cn
+
