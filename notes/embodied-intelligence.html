@@ -29,7 +29,7 @@
     <p>RT-2 把离散动作写成 token：</p>
     <pre><code>(image, instruction) → [action_1, action_2, …, action_T]</code></pre>
     <p>这让动作可以与文本共同建模，优点是能利用 VLM 的语义知识；代价是动作离散化、解码频率和机器人自由度差异会影响精度。</p>
-    <p>π<sub>0</sub> 使用预训练 VLM 加连续动作专家，以 flow matching 生成 action chunk。π<sub>0.5</sub> 扩展到开放环境和异构数据；π*<sub>0.6</sub> 用 RECAP 把示范、自主执行和人类纠正接入强化学习；π<sub>0.7</sub> 进一步加入语言、速度/质量元数据、控制模式和视觉子目标。[Physical Intelligence](https://www.pi.website/) 的研究目录是版本和配套技术的主要来源。</p>
+    <p>π<sub>0</sub> 使用预训练 VLM 加连续动作专家，以 flow matching 生成 action chunk。π<sub>0.5</sub> 扩展到开放环境和异构数据；π*<sub>0.6</sub> 用 RECAP 把示范、自主执行和人类纠正接入强化学习；π<sub>0.7</sub> 进一步加入语言、速度/质量元数据、控制模式和视觉子目标。<a href="https://www.pi.website/">Physical Intelligence</a> 的研究目录是版本和配套技术的主要来源。</p>
     <h2>3. Code-as-Policy：让模型写控制程序</h2>
     <p>Code as Policies 不要求语言模型直接输出所有关节信号，而是让它生成调用机器人 API 的程序：</p>
     <pre><code>语言目标 → LLM 生成程序 → 感知/API 调用 → IK 与伺服 → 视觉反馈</code></pre>
