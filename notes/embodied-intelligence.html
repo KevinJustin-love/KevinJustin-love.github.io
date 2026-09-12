@@ -59,7 +59,9 @@
     <table><thead><tr><th>任务</th><th>Astra 结果</th><th>观察</th></tr></thead><tbody><tr><td>方块放入碗中</td><td>19/20（95%）</td><td>高层视觉闭环和位姿 API 结合得很好。</td></tr><tr><td>拼图插入凹槽</td><td>2/20（10%）</td><td>精细接触、力控制和最后一步对齐仍然困难。</td></tr></tbody></table>
     <p>因此 Astra 更适合归入“通用多模态模型 + 机器人 API + 反馈”的 Code-as-Policy Agent，而不是端到端 VLA。X（Twitter）和小红书上的演示可以帮助发现新现象，但只有同时公开硬件、接口、提示词、失败率和测试协议时，才应作为定量证据使用。</p>
     <p class="source-note"><a href="https://openai.com/index/gpt-6-astra/">OpenAI GPT-6 Astra</a> · <a href="https://openai.robocurve.org/gpt-6-astra/">Robocurve Astra evaluation</a></p>
-    <h2>8. 一句话比较</h2>
+    <h2>Coding Is All You Need? Why We Need a World Model!</h2>
+    <p>代码策略擅长把语言目标编译成可调用机器人 API 的程序，但程序本身不会预测接触、遮挡和物体形变。视频世界模型通过预测动作造成的未来，为策略提供结果预览和可执行性检查。</p>
+    <p class="source-note"><a href="https://arxiv.org/abs/2501.03575">Cosmos</a> · <a href="https://arxiv.org/abs/2602.06949">DreamDojo</a> · <a href="https://arxiv.org/abs/2602.15922">DreamZero</a> · <a href="https://arxiv.org/abs/2604.19092">RoboWM-Bench</a></p>    <h2>8. 一句话比较</h2>
     <ul><li><strong>VLA：</strong>重点是“从看见和理解直接生成动作”。</li><li><strong>WAM：</strong>重点是“预测动作造成的未来，并用未来约束动作”。</li><li><strong>Code-as-Policy：</strong>重点是“让模型生成、执行和修复可检查的控制程序”。</li></ul>
   </article>
   <footer><a class="footer-wordmark" href="../index.html">Jiajun<span>.</span></a><span>World Models · Embodied Intelligence</span><span><a href="../notes.html">Back to Notes ↗</a> · <a href="../index.html">Home ↗</a></span></footer>
