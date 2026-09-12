@@ -1,0 +1,442 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Claude Code 使用教程"><title>Claude Code 使用教程 · Jiajun Peng</title><style>
+:root{--bg:#0d1117;--panel:#161b22;--text:#c9d1d9;--muted:#8b949e;--blue:#58a6ff;--teal:#2dd4bf;--line:#30363d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.75 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:980px;margin:0 auto;padding:48px 24px 80px}a{color:var(--blue)}nav{max-width:980px;margin:0 auto;padding:22px 24px;border-bottom:1px solid var(--line)}nav a{margin-right:18px;text-decoration:none}
+h1,h2,h3{color:#f0f6fc}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.15}h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+blockquote{border-left:3px solid var(--teal);margin-left:0;padding-left:16px;color:var(--muted)}code{background:#1f2630;border-radius:4px;padding:2px 5px}pre{background:#111820;border:1px solid var(--line);border-radius:8px;padding:16px;overflow:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:18px 0;display:block;overflow-x:auto}th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}th{background:#161b22}li{margin:5px 0}.meta{color:var(--muted);font-size:.9rem}.back{display:inline-block;margin-top:22px}
+</style></head><body><nav><a href="/index.html">主页</a><a href="/notes/">Notes</a><a href="/notes/claude-code/">分类</a></nav><main><p class="meta">更新：2026-09-12 · <a href="../usage-guide.md">查看 Markdown 源文件</a></p><h1 id="claude-code-2026-09-12">Claude Code 使用教程（截至 2026-09-12）</h1>
+<blockquote>
+<p>面向 Claude Code CLI、IDE 集成和 Claude Code 网页/桌面工作流。命令、模型和权限模式会随版本、平台、账号及组织策略变化；先输入 <code>/</code> 查看当前会话可用命令。</p>
+</blockquote>
+<h2 id="1">1. 基本概念</h2>
+<p>Claude Code 是 Anthropic 的代码代理，能够读取项目、编辑文件、运行 shell、调用 MCP、派发子代理并审查改动。CLAUDE.md 记录项目规则，权限规则控制工具调用，沙箱限制 Bash 的系统边界。</p>
+<p>官方资料：<a href="https://code.claude.com/docs/en/commands">Commands</a>、<a href="https://code.claude.com/docs/en/cli-usage">CLI reference</a>、<a href="https://code.claude.com/docs/en/interactive-mode">Interactive mode</a>、<a href="https://code.claude.com/docs/en/permissions">Permissions</a>、<a href="https://code.claude.com/docs/en/memory">Memory</a>。</p>
+<h2 id="2">2. 安装、登录、启动</h2>
+<p>按官方安装页选择系统和发行渠道。安装后进入仓库：</p>
+<pre><code class="language-bash">cd path/to/project
+claude
+claude &quot;解释这个项目的结构并指出入口文件&quot;
+claude update
+claude auth status --text
+</code></pre>
+<p>首次交互会话会提示登录 Anthropic 账号；也可以用 Console/API 计费方式。安装命令随版本变化，以官方 CLI 文档为准。</p>
+<h2 id="3">3. 三种输入方式</h2>
+<p><strong>普通提示：</strong>写明目标、范围、约束和验收标准。</p>
+<pre><code class="language-text">请先阅读 README、src/auth 和测试，不要修改数据库 schema。
+定位刷新令牌失效后的 401 处理问题，先提出计划，再实现最小修复。
+完成后运行相关测试，列出实际命令、退出状态和未验证项。
+</code></pre>
+<p><strong>斜杠命令：</strong>只能在消息开头识别。输入 <code>/</code> 后继续输入字母过滤；命令后的文字是参数。Claude 回复期间输入的命令通常排队到当前回合结束；<code>/status</code>、<code>/tasks</code>、<code>/usage</code> 等信息命令可立即显示。</p>
+<p><strong><code>!</code> Shell 模式：</strong>交互式会话中在输入行首加 <code>!</code>，直接执行 shell 并把输出加入会话：</p>
+<pre><code class="language-text">! git status
+! npm test
+! python -m pytest tests/test_login.py -q
+! ls -la
+</code></pre>
+<p><code>!</code> 不经过 Claude 的解释或审批流程，相当于你亲自在当前终端执行；先检查命令、目录和参数。长命令可按 <code>Ctrl+B</code> 放到后台。</p>
+<h2 id="4">4. 常用斜杠命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/help</code></td>
+<td>查看帮助</td>
+</tr>
+<tr>
+<td><code>/init</code></td>
+<td>生成 CLAUDE.md 起始文件</td>
+</tr>
+<tr>
+<td><code>/memory</code></td>
+<td>查看或改进项目记忆</td>
+</tr>
+<tr>
+<td><code>/plan</code></td>
+<td>进入计划模式，探索和规划但不编辑源文件</td>
+</tr>
+<tr>
+<td><code>/model</code></td>
+<td>切换模型；支持时可调整 effort</td>
+</tr>
+<tr>
+<td><code>/effort</code></td>
+<td>调整推理投入</td>
+</tr>
+<tr>
+<td><code>/permissions</code></td>
+<td>管理 allow、ask、deny 规则</td>
+</tr>
+<tr>
+<td><code>/context</code></td>
+<td>查看上下文各部分占用</td>
+</tr>
+<tr>
+<td><code>/compact</code></td>
+<td>总结对话以释放上下文</td>
+</tr>
+<tr>
+<td><code>/status</code></td>
+<td>查看会话、模型和环境状态</td>
+</tr>
+<tr>
+<td><code>/usage</code></td>
+<td>查看用量</td>
+</tr>
+<tr>
+<td><code>/diff</code></td>
+<td>查看 Git 差异</td>
+</tr>
+<tr>
+<td><code>/code-review</code>、<code>/review</code></td>
+<td>审查当前 diff；支持强度和 PR 参数</td>
+</tr>
+<tr>
+<td><code>/security-review</code></td>
+<td>检查差异中的安全问题</td>
+</tr>
+<tr>
+<td><code>/mcp</code></td>
+<td>配置或检查 MCP</td>
+</tr>
+<tr>
+<td><code>/agents</code></td>
+<td>设置或查看子代理</td>
+</tr>
+<tr>
+<td><code>/tasks</code></td>
+<td>查看后台任务</td>
+</tr>
+<tr>
+<td><code>/background</code></td>
+<td>将整个会话转为后台 agent</td>
+</tr>
+<tr>
+<td><code>/batch</code></td>
+<td>将大改动拆成独立 worktree 单元（支持时）</td>
+</tr>
+<tr>
+<td><code>/btw</code></td>
+<td>提出不加入主历史的侧问题</td>
+</tr>
+<tr>
+<td><code>/clear</code></td>
+<td>开始新任务并保留项目记忆</td>
+</tr>
+<tr>
+<td><code>/resume</code></td>
+<td>恢复旧会话</td>
+</tr>
+<tr>
+<td><code>/branch</code>、<code>/fork</code></td>
+<td>分支或复制会话</td>
+</tr>
+<tr>
+<td><code>/rewind</code></td>
+<td>回到检查点或总结部分工作（支持时）</td>
+</tr>
+<tr>
+<td><code>/doctor</code>、<code>/debug</code></td>
+<td>诊断安装/运行时问题</td>
+</tr>
+<tr>
+<td><code>/hooks</code></td>
+<td>浏览 hooks 配置</td>
+</tr>
+<tr>
+<td><code>/config</code></td>
+<td>打开配置面板</td>
+</tr>
+<tr>
+<td><code>/add-dir</code>、<code>/cd</code></td>
+<td>增加目录或移动主工作目录</td>
+</tr>
+<tr>
+<td><code>/exit</code></td>
+<td>退出会话</td>
+</tr>
+</tbody>
+</table>
+<p>以当前 <code>/</code> 菜单为准；插件和 MCP 也可能贡献额外命令。</p>
+<h2 id="5">5. 权限模式</h2>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default</code></td>
+<td>日常开发，按规则询问</td>
+</tr>
+<tr>
+<td><code>plan</code></td>
+<td>只探索和规划</td>
+</tr>
+<tr>
+<td><code>acceptEdits</code></td>
+<td>自动接受文件编辑，其他工具仍受规则约束</td>
+</tr>
+<tr>
+<td><code>auto</code></td>
+<td>使用自动模式和分类器减少提示</td>
+</tr>
+<tr>
+<td><code>dontAsk</code></td>
+<td>未允许的操作直接拒绝，不弹询问</td>
+</tr>
+<tr>
+<td><code>bypassPermissions</code></td>
+<td>隔离 runner/受控 CI，风险最高</td>
+</tr>
+</tbody>
+</table>
+<p>CLI 中按 <code>Shift+Tab</code> 循环可用模式，或启动时指定：</p>
+<pre><code class="language-bash">claude --permission-mode plan
+claude --permission-mode acceptEdits
+claude --permission-mode dontAsk
+</code></pre>
+<p>不要把 bypassPermissions 当作提速开关；优先使用精确的 allowedTools 和权限规则。</p>
+<h2 id="6">6. 权限规则与沙箱</h2>
+<p>规则按 <strong>deny → ask → allow</strong> 判断；deny 优先。示例：</p>
+<pre><code class="language-json">{
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Bash(npm test *)&quot;, &quot;Bash(git diff *)&quot;, &quot;Read&quot;],
+    &quot;ask&quot;: [&quot;Bash(git commit *)&quot;],
+    &quot;deny&quot;: [&quot;Bash(git push *)&quot;, &quot;Read(.env)&quot;]
+  }
+}
+</code></pre>
+<p>项目共享规则放 <code>.claude/settings.json</code>，个人机器规则放 <code>.claude/settings.local.json</code> 或用户设置。<code>--add-dir</code> 或 <code>/add-dir</code> 可增加工作目录。权限控制工具能否调用；沙箱提供 Bash 及子进程的文件/网络限制，两者要一起使用。</p>
+<h2 id="7-cli">7. CLI 命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>claude</code></td>
+<td>启动交互式 REPL</td>
+</tr>
+<tr>
+<td><code>claude "query"</code></td>
+<td>带初始提示启动</td>
+</tr>
+<tr>
+<td><code>claude -p "query"</code></td>
+<td>非交互 print 模式，适合脚本/CI</td>
+</tr>
+<tr>
+<td><code>cat file \| claude -p "query"</code></td>
+<td>管道输入</td>
+</tr>
+<tr>
+<td><code>claude -c</code></td>
+<td>继续当前目录最近会话</td>
+</tr>
+<tr>
+<td><code>claude -c -p "query"</code></td>
+<td>非交互继续会话</td>
+</tr>
+<tr>
+<td><code>claude -r ID "query"</code></td>
+<td>按 ID/名称恢复</td>
+</tr>
+<tr>
+<td><code>claude update</code></td>
+<td>更新 CLI</td>
+</tr>
+<tr>
+<td><code>claude auth login/logout/status</code></td>
+<td>认证管理</td>
+</tr>
+<tr>
+<td><code>claude mcp</code></td>
+<td>管理 MCP 服务器</td>
+</tr>
+<tr>
+<td><code>claude plugin</code></td>
+<td>管理插件</td>
+</tr>
+<tr>
+<td><code>claude agents</code>、<code>attach</code>、<code>logs</code>、<code>stop</code></td>
+<td>管理后台会话</td>
+</tr>
+<tr>
+<td><code>claude import codex --dry-run</code></td>
+<td>预览导入其他 agent 配置</td>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<pre><code class="language-bash">claude -p &quot;运行测试并总结失败原因&quot;
+cat logs.txt | claude -p &quot;按错误类型分组&quot;
+claude -p --output-format json &quot;检查当前 diff 的风险&quot;
+claude --permission-mode plan &quot;设计迁移方案&quot;
+claude -r auth-refactor &quot;完成剩余测试&quot;
+</code></pre>
+<h2 id="8">8. 常用参数</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--add-dir PATH</code></td>
+<td>增加可访问目录</td>
+</tr>
+<tr>
+<td><code>--permission-mode MODE</code></td>
+<td>指定权限模式</td>
+</tr>
+<tr>
+<td><code>--allowedTools</code></td>
+<td>指定无需询问的工具规则</td>
+</tr>
+<tr>
+<td><code>--tools</code></td>
+<td>限定可用工具</td>
+</tr>
+<tr>
+<td><code>--model MODEL</code></td>
+<td>指定模型</td>
+</tr>
+<tr>
+<td><code>--agent NAME</code>、<code>--agents JSON</code></td>
+<td>使用或临时定义 agent</td>
+</tr>
+<tr>
+<td><code>--effort LEVEL</code></td>
+<td>调整推理投入</td>
+</tr>
+<tr>
+<td><code>--mcp-config FILE</code></td>
+<td>加载 MCP 配置</td>
+</tr>
+<tr>
+<td><code>--plugin-dir PATH</code></td>
+<td>增加插件目录</td>
+</tr>
+<tr>
+<td><code>--settings FILE</code></td>
+<td>指定设置文件</td>
+</tr>
+<tr>
+<td><code>--output-format text\|json\|stream-json</code></td>
+<td>控制 print 输出</td>
+</tr>
+<tr>
+<td><code>--max-turns N</code></td>
+<td>限制非交互回合数（支持时）</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td>详细日志</td>
+</tr>
+<tr>
+<td><code>--dangerously-skip-permissions</code></td>
+<td>跳过询问，仅限隔离环境</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-claudemd">9. CLAUDE.md 项目记忆</h2>
+<p>运行 <code>/init</code> 生成起点，再用 <code>/memory</code> 优化。适合记录启动、测试、构建、目录职责、代码风格、兼容性和验收标准。不要放密码、token、个人路径和私有数据。</p>
+<pre><code class="language-markdown"># 项目工作说明
+- 先阅读 README 和相关测试。
+- 只修改与任务有关的文件。
+- Python 测试：python -m pytest tests -q
+- 前端检查：npm test &amp;&amp; npm run lint
+- 完成后报告改动文件、命令、退出状态和未验证项。
+- 不直接 push 或部署，先展示 diff。
+</code></pre>
+<h2 id="10-mcppluginsskillssubagents">10. MCP、Plugins、Skills、Subagents</h2>
+<ul>
+<li>MCP 连接外部工具和数据；用 <code>/mcp</code> 或 <code>claude mcp</code> 管理。</li>
+<li>Plugins 可打包命令、技能、hooks 和 MCP；安装前检查来源和权限。</li>
+<li>Skills 是可复用提示工作流，在 <code>/</code> 菜单中查看。</li>
+<li>Subagents 使用独立上下文处理子任务；<code>/tasks</code> 查看后台工作。</li>
+</ul>
+<p>并行任务应使用独立目录或 worktree，避免多个 agent 同时写同一文件。</p>
+<h2 id="11-hooks">11. Hooks</h2>
+<p>Hooks 可在 SessionStart、PreToolUse、PermissionRequest、SessionEnd 等事件运行命令、HTTP、prompt、agent 或 MCP handler。<code>/hooks</code> 可只读查看配置。PreToolUse 可以阻止危险调用，但 hook 的 allow 不能绕过 deny/ask；退出码 2 可阻止工具调用。</p>
+<h2 id="12">12. 快捷键</h2>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>取消输入或生成</td>
+</tr>
+<tr>
+<td><code>Ctrl+D</code></td>
+<td>退出会话</td>
+</tr>
+<tr>
+<td><code>Ctrl+O</code></td>
+<td>transcript viewer</td>
+</tr>
+<tr>
+<td><code>Ctrl+R</code></td>
+<td>搜索命令历史</td>
+</tr>
+<tr>
+<td>Windows <code>Alt+V</code></td>
+<td>粘贴图片（终端支持时）</td>
+</tr>
+<tr>
+<td><code>Ctrl+B</code></td>
+<td>Bash 命令后台运行</td>
+</tr>
+<tr>
+<td><code>Shift+Tab</code></td>
+<td>切换权限模式</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>transcript viewer 帮助</td>
+</tr>
+</tbody>
+</table>
+<h2 id="13">13. 推荐工作流</h2>
+<ol>
+<li><code>git status</code> 确认工作树；首次使用运行 <code>/init</code> 并检查 CLAUDE.md。</li>
+<li>大任务先 <code>/plan</code>，要求列出影响范围和验证命令。</li>
+<li>通过后执行修改；用 <code>! git diff</code>、<code>! npm test</code> 快速检查。</li>
+<li>长任务用 <code>/tasks</code>、<code>/context</code>、<code>/compact</code> 管理。</li>
+<li>完成后运行 <code>/diff</code>、<code>/code-review</code> 和项目测试。</li>
+<li>人工检查高影响操作，再提交、推送或部署。</li>
+</ol>
+<h2 id="14">14. 提示词模板</h2>
+<pre><code class="language-text">目标：
+项目范围：
+背景：
+约束（禁止修改的文件、版本、兼容性）：
+完成条件：
+必须运行的验证命令：
+输出要求（文件、测试、风险、未验证项）：
+</code></pre>
+<h2 id="15">15. 常见问题</h2>
+<p><strong>命令不存在：</strong>输入 <code>/</code> 查看当前菜单；部分命令取决于版本、平台、计划或插件。
+<strong>权限询问太多：</strong>用 <code>/permissions</code> 检查规则，增加精确 allow 或 <code>--add-dir</code>，不要直接 bypass。
+<strong><code>!</code> 是否安全：</strong>它直接交给 shell，不经过 Claude 解释；按亲自执行命令的标准检查。
+<strong>如何撤销：</strong>先看 <code>git diff</code>，使用 Git 或 <code>/rewind</code>（支持时）；删除会话不会自动撤销代码。</p>
+<h2 id="16">16. 资料与版本说明</h2>
+<p>本文根据 Anthropic 官方文档整理，核对日期为 <strong>2026-09-12</strong>。主要来源：<a href="https://code.claude.com/docs/en/commands">Commands</a>、<a href="https://code.claude.com/docs/en/cli-usage">CLI reference</a>、<a href="https://code.claude.com/docs/en/interactive-mode">Interactive mode</a>、<a href="https://code.claude.com/docs/en/permissions">Permissions</a>、<a href="https://code.claude.com/docs/en/hooks">Hooks</a>、<a href="https://code.claude.com/docs/en/security">Security</a>。以本机 <code>claude --help</code>、<code>/help</code> 和 <code>/</code> 菜单为准。</p></main></body></html>
