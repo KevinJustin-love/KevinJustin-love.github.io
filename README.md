@@ -30,9 +30,14 @@ Then open http://localhost:8000 in a browser.
 
 The site is deployed through GitHub Pages from the main branch and the repository root. After pushing changes, GitHub Pages publishes the updated index.html automatically.
 
+## Notes
+
+The /notes.html page collects links to the notes maintained in the profile repository.
+
 ## Links
 
 - Website: https://kevinjustin-love.github.io/
 - GitHub profile: https://github.com/KevinJustin-love
 - Email: mailto:pjj2006@mail.ustc.edu.cn
+
 
