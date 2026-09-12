@@ -7,8 +7,8 @@ main { max-width:900px; margin:auto; padding:28px 34px 70px; } a { color:var(--b
 .note-content th, .note-content td { padding:11px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
 .note-content th { color:var(--ink); font-weight:700; background:rgba(24,125,115,.08); }
 .note-content tr:last-child td { border-bottom:0; }
-.paper-figure { margin:30px 0 34px; padding:12px; background:var(--card); border:1px solid var(--line); }
-.paper-figure img { display:block; width:100%; height:auto; max-height:560px; object-fit:contain; background:#fff; }
+.paper-figure { max-width:100%; overflow:hidden; margin:30px 0 34px; padding:12px; background:var(--card); border:1px solid var(--line); }
+.paper-figure img { display:block; width:auto; max-width:100%; height:auto; max-height:480px; margin:0 auto; object-fit:contain; background:#fff; }
 .paper-figure figcaption { display:block; padding:12px 4px 2px; color:var(--muted); font-size:.84rem; line-height:1.55; }
 .paper-figure figcaption a { margin-left:6px; white-space:nowrap; }
 .note-diagram { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:25px 0 34px; }
@@ -16,4 +16,4 @@ main { max-width:900px; margin:auto; padding:28px 34px 70px; } a { color:var(--b
 .note-diagram strong { display:block; color:var(--blue); font:1.25rem Georgia,serif; }
 .note-diagram span { display:block; margin-top:5px; color:var(--muted); font-size:.9rem; }
 .source-note { color:var(--muted); font-size:.9rem; }
-@media (max-width:720px) { .note-diagram { grid-template-columns:1fr; } .paper-figure { margin-left:-4px; margin-right:-4px; padding:8px; } .note-content table { display:block; overflow-x:auto; white-space:normal; } }
+@media (max-width:720px) { .note-diagram { grid-template-columns:1fr; } .paper-figure { max-width:100%; margin-left:0; margin-right:0; padding:8px; } .paper-figure img { max-width:100%; max-height:320px; } .note-content table { display:block; max-width:100%; overflow-x:auto; white-space:normal; } .note-content pre { max-width:100%; overflow-x:auto; } }
