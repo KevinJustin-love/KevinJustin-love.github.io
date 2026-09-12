@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="具身智能从 RT-2、π 系列到 Code-as-Policy、WAM 与 GPT-6 Astra 的发展笔记。">
+  <title>具身智能发展笔记 | Jiajun Peng</title>
+  <link rel="stylesheet" href="../notes.css">
+</head>
+<body><main>
+  <header class="site-header"><a class="wordmark" href="../index.html">Jiajun<span>.</span></a><nav aria-label="Primary navigation"><a href="../index.html#about">About</a><a href="../index.html#research">Research</a><a href="../notes.html">Notes</a><a href="https://github.com/KevinJustin-love" target="_blank" rel="noreferrer">GitHub ↗</a></nav></header>
+  <header class="note-hero"><div class="eyebrow">Notes / Research</div><h1>具身智能发展笔记</h1><p class="note-meta">RT-2、π 系列、Code-as-Policy、WAM、小米模型与 GPT-6 Astra · 更新至 2026-09-12</p></header>
+  <article class="note-content">
+    <p>具身智能不是一条从 RT-2 线性走向某个“终局模型”的路线。当前更适合并行理解三种能力：视觉语言动作模型（VLA）负责把观测和指令映射为动作；世界—动作模型（WAM）预测动作会带来的未来；Code-as-Policy 让通用模型生成可以调用机器人 API 的程序。</p>
+    <div class="note-diagram" role="img" aria-label="三条具身智能路线的关系"><div><strong>VLA</strong><span>视觉 + 语言 → 动作</span></div><div><strong>WAM</strong><span>视频未来 ↔ 动作</span></div><div><strong>Code-as-Policy</strong><span>语言 → 程序 → API</span></div></div>
+    <figure class="paper-figure"><img src="assets/embodied-intelligence/rt2-overall.png" alt="RT-2 paper figure showing robot capabilities and generalization"><figcaption>图 1：RT-2 论文原图，展示视觉语言知识迁移到机器人控制的任务与泛化结果。<a href="https://arxiv.org/abs/2307.15818" target="_blank" rel="noreferrer">论文来源 ↗</a></figcaption></figure>
+    <figure class="paper-figure"><img src="assets/embodied-intelligence/pi0-overview.png" alt="pi0 paper overview architecture"><figcaption>图 2：π<sub>0</sub> 论文原图，展示视觉语言骨干与连续动作专家的整体结构。<a href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noreferrer">论文来源 ↗</a></figcaption></figure>
+    <figure class="paper-figure"><img src="assets/embodied-intelligence/openwam-architecture.png" alt="OpenWAM alpha architecture"><figcaption>图 3：OpenWAM-α 论文原图，展示视频流与 ActionDiT 动作流的联合建模。<a href="https://arxiv.org/abs/2609.07398" target="_blank" rel="noreferrer">论文来源 ↗</a></figcaption></figure>    <h2>1. 关键时间线</h2>
+    <table><thead><tr><th>节点</th><th>年份</th><th>改变了什么</th></tr></thead><tbody>
+      <tr><td>Code as Policies</td><td>2022</td><td>LLM 生成 Python 策略，组合感知器、几何库和控制原语；历史上早于 RT-2。</td></tr>
+      <tr><td>RT-1 / RT-2</td><td>2022–2023</td><td>用 Transformer 统一视觉、语言和动作；RT-2 将动作编码为 token，使互联网视觉语言知识迁移到机器人控制。</td></tr>
+      <tr><td>π<sub>0</sub> / FAST / π<sub>0.5</sub></td><td>2024–2025</td><td>从连续 flow matching、动作 token 化到开放环境泛化，强调跨任务和跨本体。</td></tr>
+      <tr><td>π*<sub>0.6</sub> / π<sub>0.7</sub></td><td>2025–2026</td><td>RECAP 在线强化学习、行为元数据、视觉子目标与组合泛化。</td></tr>
+      <tr><td>CaP-X / ASPIRE / PhysCaP</td><td>2026</td><td>代码策略加入多轮反馈、技能库、进化搜索和主动探测。</td></tr>
+      <tr><td>OpenWAM-α</td><td>2026</td><td>以联合去噪方式同时建模视频未来和动作 chunk。</td></tr>
+    </tbody></table>
+    <p class="source-note">论文：<a href="https://arxiv.org/abs/2209.07753">Code as Policies</a>、<a href="https://arxiv.org/abs/2307.15818">RT-2</a>、<a href="https://arxiv.org/abs/2410.24164">π<sub>0</sub></a>。</p>
+    <h2>2. RT-2 与 π：动作表示的两种选择</h2>
+    <p>RT-2 把离散动作写成 token：</p>
+    <pre><code>(image, instruction) → [action_1, action_2, …, action_T]</code></pre>
+    <p>这让动作可以与文本共同建模，优点是能利用 VLM 的语义知识；代价是动作离散化、解码频率和机器人自由度差异会影响精度。</p>
+    <p>π<sub>0</sub> 使用预训练 VLM 加连续动作专家，以 flow matching 生成 action chunk。π<sub>0.5</sub> 扩展到开放环境和异构数据；π*<sub>0.6</sub> 用 RECAP 把示范、自主执行和人类纠正接入强化学习；π<sub>0.7</sub> 进一步加入语言、速度/质量元数据、控制模式和视觉子目标。[Physical Intelligence](https://www.pi.website/) 的研究目录是版本和配套技术的主要来源。</p>
+    <h2>3. Code-as-Policy：让模型写控制程序</h2>
+    <p>Code as Policies 不要求语言模型直接输出所有关节信号，而是让它生成调用机器人 API 的程序：</p>
+    <pre><code>语言目标 → LLM 生成程序 → 感知/API 调用 → IK 与伺服 → 视觉反馈</code></pre>
+    <p>VoxPoser 将语言规划连接到 3D value map，ReKep 使用关系关键点表达约束。2026 年的 CaP-X、ASPIRE 和 PhysCaP 把重点放在执行反馈、失败修复、技能复用和物理属性探索，而不是只增加提示词长度。</p>
+    <p>这条路线的优势是可解释、可组合、容易接入现有机器人软件；瓶颈是 API 误用、延迟、错误累积、接触力控制和安全验证。</p>
+    <p class="source-note"><a href="https://code-as-policies.github.io/">Code as Policies</a> · <a href="https://capgym.github.io/">CaP-X / CaP-Gym</a> · <a href="https://physcap.github.io/">PhysCaP</a></p>
+    <h2>4. WAM 与 OpenWAM</h2>
+    <p>WAM 把“会发生什么”和“应该怎么做”放到同一模型中。OpenWAM-α 使用视频 DiT 与专用 ActionDiT，通过联合注意力和同步去噪生成未来视频与动作 chunk。官方报告约 6,400 小时、5.18 亿帧、80 维统一动作空间，并覆盖八个模拟基准和三个真实机器人平台。</p>
+    <pre><code>(current frame, language, noisy video, noisy action)
+                 ↓ joint attention + mutual visibility
+          future video latents + executable actions</code></pre>
+    <p>它的关键价值是将世界模型变成动作选择的中间约束；但视频逼真不代表动作一定可执行，真实动力学和 OOD 评测仍然重要。</p>
+    <p class="source-note"><a href="https://openwam-official.github.io/">OpenWAM 官方页面</a> · <a href="https://arxiv.org/abs/2609.07398">OpenWAM 论文</a></p>
+    <h2>5. 小米具身模型谱系</h2>
+    <table><thead><tr><th>模型</th><th>定位</th><th>阅读重点</th></tr></thead><tbody>
+      <tr><td>MiMo-Embodied</td><td>具身 VLM</td><td>任务规划、空间理解、可供性和具身推理。</td></tr>
+      <tr><td>Xiaomi-Robotics-0</td><td>VLA</td><td>VLM 知识保留、flow matching、异步执行和实时动作。</td></tr>
+      <tr><td>Xiaomi-Robotics-U0</td><td>世界模型</td><td>多视角场景生成、视频预测、具身迁移和数据增强。</td></tr>
+      <tr><td>Xiaomi-Robotics-1</td><td>机器人基座模型</td><td>超过十万小时 UMI 轨迹预训练和跨任务泛化。</td></tr>
+    </tbody></table>
+    <p class="source-note"><a href="https://arxiv.org/abs/2511.16518">MiMo-Embodied</a> · <a href="https://arxiv.org/abs/2602.12684">Xiaomi-Robotics-0</a> · <a href="https://arxiv.org/abs/2607.11643">Xiaomi-Robotics-U0</a> · <a href="https://arxiv.org/abs/2607.15330">Xiaomi-Robotics-1</a></p>
+    <h2>6. 截至 2026-09-12 的榜单读法</h2>
+    <p>“榜首”必须绑定基准、版本和日期。RoboCasa365 官方榜单在 2026-09-10 显示 Xiaomi-Robotics-1 为第一（57.4）；RoboDojo 当前榜单的第一是 DM0.5（24.90），Xiaomi-Robotics-1 约为 20.07；WorldArena 2.0 Track 1 的第一是 FlowWAM-FiveAges（67.62），Xiaomi-Robotics-U0 为 67.39。不同赛道不能合并成一个总排名。</p>
+    <p class="source-note"><a href="https://robocasa.ai/leaderboard.html">RoboCasa365</a> · <a href="https://robodojo-benchmark.com/">RoboDojo</a> · <a href="https://huggingface.co/spaces/WorldArena/WorldArena2.0/blob/main/RESULTS_README.md">WorldArena 2.0</a></p>
+    <h2>7. GPT-6 Astra：通用模型进入控制环</h2>
+    <p>OpenAI 官方把 GPT-6 Astra 定位为通用推理、代码和 computer use 模型，并未公开将其定义为专门 VLA。Robocurve 的第三方实验把 Astra 接到 Inspect Robots harness：输入三路摄像头和本体状态，输出双臂末端位姿，再由 IK 转成关节角。</p>
+    <table><thead><tr><th>任务</th><th>Astra 结果</th><th>观察</th></tr></thead><tbody><tr><td>方块放入碗中</td><td>19/20（95%）</td><td>高层视觉闭环和位姿 API 结合得很好。</td></tr><tr><td>拼图插入凹槽</td><td>2/20（10%）</td><td>精细接触、力控制和最后一步对齐仍然困难。</td></tr></tbody></table>
+    <p>因此 Astra 更适合归入“通用多模态模型 + 机器人 API + 反馈”的 Code-as-Policy Agent，而不是端到端 VLA。X（Twitter）和小红书上的演示可以帮助发现新现象，但只有同时公开硬件、接口、提示词、失败率和测试协议时，才应作为定量证据使用。</p>
+    <p class="source-note"><a href="https://openai.com/index/gpt-6-astra/">OpenAI GPT-6 Astra</a> · <a href="https://openai.robocurve.org/gpt-6-astra/">Robocurve Astra evaluation</a></p>
+    <h2>8. 一句话比较</h2>
+    <ul><li><strong>VLA：</strong>重点是“从看见和理解直接生成动作”。</li><li><strong>WAM：</strong>重点是“预测动作造成的未来，并用未来约束动作”。</li><li><strong>Code-as-Policy：</strong>重点是“让模型生成、执行和修复可检查的控制程序”。</li></ul>
+  </article>
+  <footer><a class="footer-wordmark" href="../index.html">Jiajun<span>.</span></a><span>World Models · Embodied Intelligence</span><span><a href="../notes.html">Back to Notes ↗</a> · <a href="../index.html">Home ↗</a></span></footer>
+</main></body></html>
