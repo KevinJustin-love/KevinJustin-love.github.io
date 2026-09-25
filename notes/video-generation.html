@@ -12,18 +12,35 @@
   <a class="wordmark" href="../index.html">Jiajun<span>.</span></a>
   <nav aria-label="Primary navigation"><a href="../index.html#about">About</a><a href="../index.html#research">Research</a><a href="../notes.html">Notes</a><a href="https://github.com/KevinJustin-love" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
 </header>
+<nav class="note-breadcrumb" aria-label="面包屑导航">
+  <a href="../notes.html">Notes</a><span aria-hidden="true">/</span><a href="../notes.html#video">视频生成</a><span aria-hidden="true">/</span><span aria-current="page">视频生成模型如何走向世界模型</span>
+</nav>
 <header class="note-hero">
   <div class="eyebrow">Notes / Video Models</div>
   <h1>视频生成模型如何走向世界模型</h1>
   <p class="note-meta">从时空扩散、Video DiT 到可交互、可规划、可记忆的世界模型｜更新于 2026-09-12</p>
 </header>
+<details class="note-toc">
+  <summary>本篇目录</summary>
+  <nav aria-label="本篇目录">
+    <ol>
+      <li><a href="#section-01">1. 为什么视频比图像难</a></li>
+      <li><a href="#section-02">2. 发展脉络</a></li>
+      <li><a href="#section-03">3. 几个关键分叉</a></li>
+      <li><a href="#section-04">4. 近期模型对照</a></li>
+      <li><a href="#section-05">5. Xun Huang 的世界模型视角</a></li>
+      <li><a href="#section-06">6. 怎样读榜单</a></li>
+      <li><a href="#section-07">论文入口</a></li>
+    </ol>
+  </nav>
+</details>
 <article class="note-content">
 <blockquote><p>这篇短笔记按“瓶颈 → 方法 → 代价 → 下一步”组织。模型榜单必须注明任务、分辨率、时长、音频和评测日期；不存在跨任务的单一总榜。</p></blockquote>
 
-<h2>1. 为什么视频比图像难</h2>
+<h2 id="section-01">1. 为什么视频比图像难</h2>
 <p>视频生成不仅要让每一帧看起来真实，还要让身份、遮挡、运动和物理关系跨帧保持一致。视频 latent 的 token 数近似为 <code>N=T×H×W</code>，标准全注意力的成本是 <code>O(N²)</code>。因此每次架构跃迁都在回答一个新的问题：如何压缩表示、如何建模时间、如何控制长程记忆，以及如何让动作真的改变未来。</p>
 
-<h2>2. 发展脉络</h2>
+<h2 id="section-02">2. 发展脉络</h2>
 <table>
 <thead><tr><th>阶段</th><th>当时的瓶颈</th><th>代表方法</th><th>带来的变化</th></tr></thead>
 <tbody>
@@ -36,7 +53,7 @@
 </tbody>
 </table>
 
-<h2>3. 几个关键分叉</h2>
+<h2 id="section-03">3. 几个关键分叉</h2>
 <h3>Genie：从“生成片段”到“生成环境”</h3>
 <p><a href="https://arxiv.org/abs/2402.15391">Genie</a> 用时空 tokenizer、无监督 latent-action model 和自回归 dynamics，从没有动作标签的游戏视频中学习逐帧可控的环境。它的目标是回答“按下动作后会发生什么”，所以不同于一次性采样整段视频的 T2V 模型；代价是 rollout 慢、视觉分辨率较低。</p>
 
@@ -49,7 +66,7 @@
 <h3>2025–26：生成未来并支持规划</h3>
 <p><a href="https://arxiv.org/abs/2502.10248">Step-Video-T2V</a> 使用深压缩 Video-VAE、3D DiT、Flow Matching 和 Video-DPO；<a href="https://arxiv.org/abs/2511.18870">HunyuanVideo 1.5</a> 用选择性滑窗注意力和级联超分降低成本；<a href="https://arxiv.org/abs/2506.24113">Epona</a> 将 latent dynamics、未来视频和车辆轨迹解耦；<a href="https://arxiv.org/abs/2607.07675">LingBot-Video</a> 用 MoE DiT、机器人数据和物理/任务奖励把视觉生成推进到具身智能。</p>
 
-<h2>4. 近期模型对照</h2>
+<h2 id="section-04">4. 近期模型对照</h2>
 <table>
 <thead><tr><th>模型</th><th>核心架构取舍</th><th>适合回答的问题</th></tr></thead>
 <tbody>
@@ -61,18 +78,25 @@
 </tbody>
 </table>
 
-<h2>5. Xun Huang 的世界模型视角</h2>
+<h2 id="section-05">5. Xun Huang 的世界模型视角</h2>
 <p><a href="https://www.xunhuang.me/blogs/world_model.html">Xun Huang 的 From Video Generation to Video World Models</a> 提供了一个有用的能力分层：<em>faithfulness</em>（逼真）、<em>interactivity</em>（动作可控）、<em>planning</em>（可评估轨迹）和 <em>statefulness</em>（保持隐藏状态）。这说明 VBench 或人类美学分数不能单独证明世界模型能力。进一步的架构路线包括 Self-Forcing、SSM 长上下文、VRAG 全局状态、3D 几何桥接和可修正的内部状态。</p>
 <p>延伸阅读：<a href="https://arxiv.org/abs/2505.20171">Long-Context State-Space Video World Models</a>、<a href="https://arxiv.org/abs/2505.21996">Learning World Models for Interactive Video Generation</a>、<a href="https://arxiv.org/abs/2512.12430">Endless World</a>、<a href="https://arxiv.org/abs/2608.30692">Can Video World Models Track Unobserved World States?</a>。</p>
 
-<h2>6. 怎样读榜单</h2>
+<h2 id="section-06">6. 怎样读榜单</h2>
 <p>截至 2026-09-12，公开榜单通常把 Veo 3.1、Sora 2 Pro、Seedance 2.0、Kling 3 和 MiniMax H3 放在闭源第一梯队候选；开放权重应分别看 Wan/Hunyuan 的质量、SANA 的效率以及 LingBot 的具身能力。比较时至少记录任务（T2V/I2V）、分辨率、时长、是否带音频、投票量和发布日期。</p>
 
-<h2>论文入口</h2>
+<h2 id="section-07">论文入口</h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2402.15391">Genie</a> · <a href="https://arxiv.org/abs/2412.03603">HunyuanVideo</a> · <a href="https://arxiv.org/abs/2503.20314">Wan</a></li>
 <li><a href="https://arxiv.org/abs/2509.24695">SANA-Video</a> · <a href="https://arxiv.org/abs/2607.07675">LingBot-Video</a> · <a href="https://arxiv.org/abs/2602.21818">SkyReels-V4</a></li>
 </ul>
 </article>
+<nav class="related-notes" aria-label="相关笔记">
+  <p>继续阅读</p>
+  <ul>
+    <li><a href="ar-video-generation.html">AR Video Gen →</a></li>
+    <li><a href="../notes.html#video">返回视频生成主题 →</a></li>
+  </ul>
+</nav>
 <footer><a class="footer-wordmark" href="../index.html">Jiajun<span>.</span></a><span>World Models · Embodied Intelligence</span><a href="../notes.html">All notes ↗</a></footer>
 </main></body></html>

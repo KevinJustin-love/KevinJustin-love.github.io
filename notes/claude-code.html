@@ -3,15 +3,41 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Notes on setup, workflows, and effective use of Claude Code."><title>Claude Code 使用教程 | Jiajun Peng</title><link rel="stylesheet" href="../notes.css"></head>
 <body><main>
 <header class="site-header"><a class="wordmark" href="../index.html">Jiajun<span>.</span></a><nav aria-label="Primary navigation"><a href="../index.html#about">About</a><a href="../index.html#research">Research</a><a href="../notes.html">Notes</a><a href="https://github.com/KevinJustin-love" target="_blank" rel="noreferrer">GitHub ↗</a></nav></header>
-<header class="note-hero"><div class="eyebrow">Notes / Claude Code</div><h1>Claude Code 使用教程</h1><p class="note-meta">Notes on setup, workflows, and effective use of Claude Code.</p></header>
-<article class="note-content"><h1>Claude Code 使用教程（截至 2026-09-12）</h1>
+<nav class="note-breadcrumb" aria-label="面包屑导航">
+  <a href="../notes.html">Notes</a><span aria-hidden="true">/</span><a href="../notes.html#tools">开发工具</a><span aria-hidden="true">/</span><span aria-current="page">Claude Code 使用教程</span>
+</nav>
+<header class="note-hero"><div class="eyebrow">Notes / Claude Code</div><h1 id="claude-code-2026-09-12">Claude Code 使用教程</h1><p class="note-meta">Notes on setup, workflows, and effective use of Claude Code. · 内容核对：2026-09-12</p></header>
+<details class="note-toc">
+  <summary>本篇目录</summary>
+  <nav aria-label="本篇目录">
+    <ol>
+      <li><a href="#1">1. 基本概念</a></li>
+      <li><a href="#2">2. 安装、登录、启动</a></li>
+      <li><a href="#3">3. 三种输入方式</a></li>
+      <li><a href="#4">4. 常用斜杠命令</a></li>
+      <li><a href="#5">5. 权限模式</a></li>
+      <li><a href="#6">6. 权限规则与沙箱</a></li>
+      <li><a href="#7-cli">7. CLI 命令</a></li>
+      <li><a href="#8">8. 常用参数</a></li>
+      <li><a href="#9-claudemd">9. CLAUDE.md 项目记忆</a></li>
+      <li><a href="#10-mcppluginsskillssubagents">10. MCP、Plugins、Skills、Subagents</a></li>
+      <li><a href="#11-hooks">11. Hooks</a></li>
+      <li><a href="#12">12. 快捷键</a></li>
+      <li><a href="#13">13. 推荐工作流</a></li>
+      <li><a href="#14">14. 提示词模板</a></li>
+      <li><a href="#15">15. 常见问题</a></li>
+      <li><a href="#16">16. 资料与版本说明</a></li>
+    </ol>
+  </nav>
+</details>
+<article class="note-content">
 <blockquote>
 <p>面向 Claude Code CLI、IDE 集成和 Claude Code 网页/桌面工作流。命令、模型和权限模式会随版本、平台、账号及组织策略变化；先输入 <code>/</code> 查看当前会话可用命令。</p>
 </blockquote>
-<h2>1. 基本概念</h2>
+<h2 id="1">1. 基本概念</h2>
 <p>Claude Code 是 Anthropic 的代码代理，能够读取项目、编辑文件、运行 shell、调用 MCP、派发子代理并审查改动。CLAUDE.md 记录项目规则，权限规则控制工具调用，沙箱限制 Bash 的系统边界。</p>
 <p>官方资料：<a href="https://code.claude.com/docs/en/commands">Commands</a>、<a href="https://code.claude.com/docs/en/cli-usage">CLI reference</a>、<a href="https://code.claude.com/docs/en/interactive-mode">Interactive mode</a>、<a href="https://code.claude.com/docs/en/permissions">Permissions</a>、<a href="https://code.claude.com/docs/en/memory">Memory</a>。</p>
-<h2>2. 安装、登录、启动</h2>
+<h2 id="2">2. 安装、登录、启动</h2>
 <p>按官方安装页选择系统和发行渠道。安装后进入仓库：</p>
 <pre><code class="language-bash">cd path/to/project
 claude
@@ -20,7 +46,7 @@ claude update
 claude auth status --text
 </code></pre>
 <p>首次交互会话会提示登录 Anthropic 账号；也可以用 Console/API 计费方式。安装命令随版本变化，以官方 CLI 文档为准。</p>
-<h2>3. 三种输入方式</h2>
+<h2 id="3">3. 三种输入方式</h2>
 <p><strong>普通提示：</strong>写明目标、范围、约束和验收标准。</p>
 <pre><code class="language-text">请先阅读 README、src/auth 和测试，不要修改数据库 schema。
 定位刷新令牌失效后的 401 处理问题，先提出计划，再实现最小修复。
@@ -34,7 +60,7 @@ claude auth status --text
 ! ls -la
 </code></pre>
 <p><code>!</code> 不经过 Claude 的解释或审批流程，相当于你亲自在当前终端执行；先检查命令、目录和参数。长命令可按 <code>Ctrl+B</code> 放到后台。</p>
-<h2>4. 常用斜杠命令</h2>
+<h2 id="4">4. 常用斜杠命令</h2>
 <table>
 <thead>
 <tr>
@@ -162,7 +188,7 @@ claude auth status --text
 </tbody>
 </table>
 <p>以当前 <code>/</code> 菜单为准；插件和 MCP 也可能贡献额外命令。</p>
-<h2>5. 权限模式</h2>
+<h2 id="5">5. 权限模式</h2>
 <table>
 <thead>
 <tr>
@@ -203,7 +229,7 @@ claude --permission-mode acceptEdits
 claude --permission-mode dontAsk
 </code></pre>
 <p>不要把 bypassPermissions 当作提速开关；优先使用精确的 allowedTools 和权限规则。</p>
-<h2>6. 权限规则与沙箱</h2>
+<h2 id="6">6. 权限规则与沙箱</h2>
 <p>规则按 <strong>deny → ask → allow</strong> 判断；deny 优先。示例：</p>
 <pre><code class="language-json">{
   &quot;permissions&quot;: {
@@ -214,7 +240,7 @@ claude --permission-mode dontAsk
 }
 </code></pre>
 <p>项目共享规则放 <code>.claude/settings.json</code>，个人机器规则放 <code>.claude/settings.local.json</code> 或用户设置。<code>--add-dir</code> 或 <code>/add-dir</code> 可增加工作目录。权限控制工具能否调用；沙箱提供 Bash 及子进程的文件/网络限制，两者要一起使用。</p>
-<h2>7. CLI 命令</h2>
+<h2 id="7-cli">7. CLI 命令</h2>
 <table>
 <thead>
 <tr>
@@ -284,7 +310,7 @@ claude -p --output-format json &quot;检查当前 diff 的风险&quot;
 claude --permission-mode plan &quot;设计迁移方案&quot;
 claude -r auth-refactor &quot;完成剩余测试&quot;
 </code></pre>
-<h2>8. 常用参数</h2>
+<h2 id="8">8. 常用参数</h2>
 <table>
 <thead>
 <tr>
@@ -351,7 +377,7 @@ claude -r auth-refactor &quot;完成剩余测试&quot;
 </tr>
 </tbody>
 </table>
-<h2>9. CLAUDE.md 项目记忆</h2>
+<h2 id="9-claudemd">9. CLAUDE.md 项目记忆</h2>
 <p>运行 <code>/init</code> 生成起点，再用 <code>/memory</code> 优化。适合记录启动、测试、构建、目录职责、代码风格、兼容性和验收标准。不要放密码、token、个人路径和私有数据。</p>
 <pre><code class="language-markdown"># 项目工作说明
 - 先阅读 README 和相关测试。
@@ -361,7 +387,7 @@ claude -r auth-refactor &quot;完成剩余测试&quot;
 - 完成后报告改动文件、命令、退出状态和未验证项。
 - 不直接 push 或部署，先展示 diff。
 </code></pre>
-<h2>10. MCP、Plugins、Skills、Subagents</h2>
+<h2 id="10-mcppluginsskillssubagents">10. MCP、Plugins、Skills、Subagents</h2>
 <ul>
 <li>MCP 连接外部工具和数据；用 <code>/mcp</code> 或 <code>claude mcp</code> 管理。</li>
 <li>Plugins 可打包命令、技能、hooks 和 MCP；安装前检查来源和权限。</li>
@@ -369,9 +395,9 @@ claude -r auth-refactor &quot;完成剩余测试&quot;
 <li>Subagents 使用独立上下文处理子任务；<code>/tasks</code> 查看后台工作。</li>
 </ul>
 <p>并行任务应使用独立目录或 worktree，避免多个 agent 同时写同一文件。</p>
-<h2>11. Hooks</h2>
+<h2 id="11-hooks">11. Hooks</h2>
 <p>Hooks 可在 SessionStart、PreToolUse、PermissionRequest、SessionEnd 等事件运行命令、HTTP、prompt、agent 或 MCP handler。<code>/hooks</code> 可只读查看配置。PreToolUse 可以阻止危险调用，但 hook 的 allow 不能绕过 deny/ask；退出码 2 可阻止工具调用。</p>
-<h2>12. 快捷键</h2>
+<h2 id="12">12. 快捷键</h2>
 <table>
 <thead>
 <tr>
@@ -414,7 +440,7 @@ claude -r auth-refactor &quot;完成剩余测试&quot;
 </tr>
 </tbody>
 </table>
-<h2>13. 推荐工作流</h2>
+<h2 id="13">13. 推荐工作流</h2>
 <ol>
 <li><code>git status</code> 确认工作树；首次使用运行 <code>/init</code> 并检查 CLAUDE.md。</li>
 <li>大任务先 <code>/plan</code>，要求列出影响范围和验证命令。</li>
@@ -423,7 +449,7 @@ claude -r auth-refactor &quot;完成剩余测试&quot;
 <li>完成后运行 <code>/diff</code>、<code>/code-review</code> 和项目测试。</li>
 <li>人工检查高影响操作，再提交、推送或部署。</li>
 </ol>
-<h2>14. 提示词模板</h2>
+<h2 id="14">14. 提示词模板</h2>
 <pre><code class="language-text">目标：
 项目范围：
 背景：
@@ -432,12 +458,19 @@ claude -r auth-refactor &quot;完成剩余测试&quot;
 必须运行的验证命令：
 输出要求（文件、测试、风险、未验证项）：
 </code></pre>
-<h2>15. 常见问题</h2>
+<h2 id="15">15. 常见问题</h2>
 <p><strong>命令不存在：</strong>输入 <code>/</code> 查看当前菜单；部分命令取决于版本、平台、计划或插件。
 <strong>权限询问太多：</strong>用 <code>/permissions</code> 检查规则，增加精确 allow 或 <code>--add-dir</code>，不要直接 bypass。
 <strong><code>!</code> 是否安全：</strong>它直接交给 shell，不经过 Claude 解释；按亲自执行命令的标准检查。
 <strong>如何撤销：</strong>先看 <code>git diff</code>，使用 Git 或 <code>/rewind</code>（支持时）；删除会话不会自动撤销代码。</p>
-<h2>16. 资料与版本说明</h2>
+<h2 id="16">16. 资料与版本说明</h2>
 <p>本文根据 Anthropic 官方文档整理，核对日期为 <strong>2026-09-12</strong>。主要来源：<a href="https://code.claude.com/docs/en/commands">Commands</a>、<a href="https://code.claude.com/docs/en/cli-usage">CLI reference</a>、<a href="https://code.claude.com/docs/en/interactive-mode">Interactive mode</a>、<a href="https://code.claude.com/docs/en/permissions">Permissions</a>、<a href="https://code.claude.com/docs/en/hooks">Hooks</a>、<a href="https://code.claude.com/docs/en/security">Security</a>。以本机 <code>claude --help</code>、<code>/help</code> 和 <code>/</code> 菜单为准。</p></article>
+<nav class="related-notes" aria-label="相关笔记">
+  <p>继续阅读</p>
+  <ul>
+    <li><a href="codex.html">Codex 使用指南 →</a></li>
+    <li><a href="../notes.html#tools">返回开发工具主题 →</a></li>
+  </ul>
+</nav>
 <footer><a class="footer-wordmark" href="../index.html">Jiajun<span>.</span></a><span>World Models · Embodied Intelligence</span><a href="../notes.html">All notes ↗</a></footer>
 </main></body></html>

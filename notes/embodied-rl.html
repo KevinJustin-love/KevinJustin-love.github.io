@@ -9,65 +9,88 @@
 </head>
 <body><main>
   <header class="site-header"><a class="wordmark" href="../index.html">Jiajun<span>.</span></a><nav aria-label="Primary navigation"><a href="../index.html#about">About</a><a href="../index.html#research">Research</a><a href="../notes.html">Notes</a><a href="https://github.com/KevinJustin-love" target="_blank" rel="noreferrer">GitHub ↗</a></nav></header>
+<nav class="note-breadcrumb" aria-label="面包屑导航">
+  <a href="../notes.html">Notes</a><span aria-hidden="true">/</span><a href="../notes.html#embodied">具身智能与强化学习</a><span aria-hidden="true">/</span><span aria-current="page">具身智能中的强化学习发展脉络</span>
+</nav>
   <header class="note-hero"><div class="eyebrow">Notes / Research</div><h1>具身智能中的强化学习发展脉络</h1><p class="note-meta">从经典控制、Sim-to-Real 到 VLA、DiffusionNFT 与 RL-100 · 更新至 2026-09-12</p></header>
-  <article class="note-content">
+  <details class="note-toc">
+  <summary>本篇目录</summary>
+  <nav aria-label="本篇目录">
+    <ol>
+      <li><a href="#section-01">1. 入门者先理解五个对象</a></li>
+      <li><a href="#section-02">2. 第一阶段：经典 RL 与机器人控制</a></li>
+      <li><a href="#section-03">3. 第二阶段：深度 RL 与 Sim-to-Real</a></li>
+      <li><a href="#section-04">4. 第三阶段：真实世界 RL 变成系统工程</a></li>
+      <li><a href="#section-05">5. 第四阶段：示范学习与离线 RL</a></li>
+      <li><a href="#section-06">6. 第五阶段：Diffusion Policy 改变策略表示</a></li>
+      <li><a href="#section-07">7. 第六阶段：世界模型与 Model-Based RL</a></li>
+      <li><a href="#section-08">8. 第七阶段：VLA 把语义先验接入动作</a></li>
+      <li><a href="#section-09">9. 第八阶段：数据飞轮与真实机器人规模化</a></li>
+      <li><a href="#section-10">10. Flow-GRPO：扩散生成模型的在线 RL 分支</a></li>
+      <li><a href="#section-11">11. DiffusionNFT：forward-process 后训练</a></li>
+      <li><a href="#section-12">12. 把整条路线放在一张表里</a></li>
+      <li><a href="#section-13">13. 初学者阅读顺序</a></li>
+    </ol>
+  </nav>
+</details>
+<article class="note-content">
     <p>这篇笔记回答一个比“最新模型是哪一个”更基础的问题：强化学习（RL）在具身智能里到底解决什么，为什么它一直没有被某一个 VLA 模型完全取代，以及 Flow-GRPO、DiffusionNFT 这样的扩散模型 RL 方法应该放在整条技术路线的什么位置。</p>
 
-    <h2>1. 入门者先理解五个对象</h2>
+    <h2 id="section-01">1. 入门者先理解五个对象</h2>
     <p>机器人在时刻 <em>t</em> 看到相机画面、关节角、速度和触觉，这些组成状态 <em>s<sub>t</sub></em>。策略（policy）根据状态选择动作 <em>a<sub>t</sub></em>，动作可以是关节位置、速度、力矩，或一小段连续动作（action chunk）。环境执行动作后给出新状态和奖励 <em>r<sub>t</sub></em>。从开始到结束的一串状态、动作和奖励叫轨迹（trajectory）。RL 要最大化的不是某一步奖励，而是未来奖励的折扣总和（return）。</p>
     <p>这带来“信用分配”问题：如果机器人 30 步后才发现杯子掉了，究竟是第 4 步的抓取姿态、第 12 步的移动速度，还是第 25 步的释放动作导致失败？具身 RL 的很多进展，本质上是在改善探索、数据覆盖和信用分配，而不只是更换优化器。</p>
     <div class="note-diagram" role="img" aria-label="具身强化学习的闭环"><div><strong>观察</strong><span>相机、关节、触觉 → 状态</span></div><div><strong>决策</strong><span>策略 → 动作或动作片段</span></div><div><strong>反馈</strong><span>成功、距离、碰撞 → 奖励</span></div></div>
 
-    <h2>2. 第一阶段：经典 RL 与机器人控制</h2>
+    <h2 id="section-02">2. 第一阶段：经典 RL 与机器人控制</h2>
     <p>早期工作主要在低维状态和可控环境中使用 Q-learning、SARSA、actor-critic、policy gradient 和 PPO。Q-learning 学习“在状态 s 做动作 a 的长期价值”；policy gradient 直接调整策略参数；actor-critic 用 actor 选动作、critic 估计价值；PPO 用裁剪限制一次更新的幅度，减少策略突然崩溃。</p>
     <p>在机器人里，算法通常不是最先遇到的障碍。更难的是奖励：成功奖励很稀疏，距离奖励可能被钻空子，力控任务还需要安全边界。于是课程学习、奖励塑形、残差控制和示范初始化逐渐成为标准配套。</p>
     <p class="source-note"><a href="https://spinningup.openai.com/en/latest/algorithms/ppo.html">PPO 入门资料</a> · <a href="https://arxiv.org/abs/1707.06347">PPO 论文</a></p>
 
-    <h2>3. 第二阶段：深度 RL 与 Sim-to-Real</h2>
+    <h2 id="section-03">3. 第二阶段：深度 RL 与 Sim-to-Real</h2>
     <p>视觉输入让状态空间急剧变大，深度网络开始承担感知和控制。真实机器人探索昂贵，于是主流路线是在仿真中并行训练，再迁移到现实。域随机化会改变光照、纹理、相机噪声、摩擦、物体质量、控制延迟和执行器误差；系统辨识则用真实数据估计仿真参数；残差策略在一个安全的控制器上只学习需要修正的部分。</p>
     <p>Sim-to-Real 的核心风险是“仿真里学到的因果关系不对”。接触、摩擦、遮挡、软物体形变和长时序累积误差往往没有被仿真覆盖。因而真实部署通常还需要少量 real-to-sim 校准、视觉适配和保守的动作限制。</p>
     <p class="source-note"><a href="https://arxiv.org/abs/1703.06907">Sim-to-Real with Domain Randomization</a> · <a href="https://arxiv.org/abs/2004.12570">The Ingredients of Real-World Robotic RL</a></p>
 
-    <h2>4. 第三阶段：真实世界 RL 变成系统工程</h2>
+    <h2 id="section-04">4. 第三阶段：真实世界 RL 变成系统工程</h2>
     <p>真实世界 RL 不只是把环境从 MuJoCo 换成机械臂。系统必须自动重置失败任务、记录同步的观测和动作、限制速度与力矩、过滤损坏传感器、处理中途人工接管，并且在长时间运行后仍能持续收集有效数据。自动化程度往往直接决定算法能否扩大规模。</p>
     <p>“在线”意味着策略正在与机器人交互并获得新数据；“真实世界在线”还意味着每个探索动作都要付出物理成本。因此许多工作采用安全探索、残差 RL、离线预训练和少量在线改进的混合方案。</p>
 
-    <h2>5. 第四阶段：示范学习与离线 RL</h2>
+    <h2 id="section-05">5. 第四阶段：示范学习与离线 RL</h2>
     <p>离线 RL 先固定一个数据集，再学习比数据中行为更好的策略。数据可以来自人类遥操作、专家控制器、旧策略或失败尝试。行为克隆（BC）直接模仿动作；CQL、IQL、AWAC 等离线 RL 方法尝试估计“如果选择另一个动作会不会更好”。</p>
     <p>离线 RL 的两个基本限制是：数据没有覆盖的动作无法可靠评估，以及奖励通常需要事后重建。机器人实践里常见的做法是先用示范得到不会立即失控的策略，再用离线 RL 做保守改进，最后用少量在线数据纠正分布偏差。</p>
     <p class="source-note"><a href="https://arxiv.org/abs/1812.02900">D4RL</a> · <a href="https://arxiv.org/abs/2110.06169">IQL</a> · <a href="https://arxiv.org/abs/2208.06193">Diffusion Policies as an Expressive Policy Class for Offline RL</a></p>
 
-    <h2>6. 第五阶段：Diffusion Policy 改变策略表示</h2>
+    <h2 id="section-06">6. 第五阶段：Diffusion Policy 改变策略表示</h2>
     <p>传统连续控制常用单峰高斯策略；但一个视觉任务可能有多条同样合理的动作路径。Diffusion Policy 把一段动作序列当作条件生成对象：训练时逐渐给专家动作加噪声，模型学习去噪；执行时从噪声开始逐步生成 action chunk。</p>
     <p>它解决的是“如何表达多模态动作”，不是自动解决奖励和探索。比如抓取物体可以从左边或右边接近，扩散策略能保留两种模式，而简单回归可能输出不可执行的中间轨迹。代价是多步采样、闭环延迟，以及需要额外的 RL 或在线纠错来利用任务奖励。</p>
     <p class="source-note"><a href="https://arxiv.org/abs/2303.04137">Diffusion Policy: Visuomotor Policy Learning via Action Diffusion</a></p>
 
-    <h2>7. 第六阶段：世界模型与 Model-Based RL</h2>
+    <h2 id="section-07">7. 第六阶段：世界模型与 Model-Based RL</h2>
     <p>Model-free RL 直接从试错中学策略；Model-Based RL 先学习“动作会造成什么后果”的模型，再在模型里规划。具身世界模型可以预测未来图像、物体状态或潜变量。它的吸引力在于：策略可以在真实执行前比较多个候选动作，减少危险探索。</p>
     <p>世界模型的预测逼真并不等于动力学正确。视频看起来合理，接触力、摩擦和物体可供性仍可能错误。因此世界模型更适合与短时规划、动作验证、数据增强和不确定性估计组合，而不是单独作为真实控制器。</p>
     <p class="source-note"><a href="https://arxiv.org/abs/2301.04104">DreamerV3</a> · <a href="https://arxiv.org/abs/2402.15391">Genie 2</a> · <a href="https://arxiv.org/abs/2602.06949">DreamDojo</a></p>
 
-    <h2>8. 第七阶段：VLA 把语义先验接入动作</h2>
+    <h2 id="section-08">8. 第七阶段：VLA 把语义先验接入动作</h2>
     <p>RT-1、RT-2、Octo、OpenVLA 等模型将视觉、语言和动作放到同一策略里。RT-2 代表把动作离散成 token，让视觉语言模型的知识迁移到机器人；OpenVLA 代表开放权重和大规模机器人数据；π<sub>0</sub> 等路线使用视觉语言骨干加连续 flow/diffusion action head，以更高频、更精确地输出动作。</p>
     <p>VLA 的预训练解决“理解指令、识别物体和迁移语义”问题，但不自动解决真实反馈。RL 在这里的角色更像后训练：从示范策略开始，用成功率、人工偏好、纠错或自主 rollout 对特定任务进行调整。</p>
     <p class="source-note"><a href="https://arxiv.org/abs/2212.06817">RT-1</a> · <a href="https://arxiv.org/abs/2307.15818">RT-2</a> · <a href="https://arxiv.org/abs/2405.12213">Octo</a> · <a href="https://arxiv.org/abs/2406.09246">OpenVLA</a> · <a href="https://arxiv.org/abs/2410.24164">π<sub>0</sub></a></p>
 
-    <h2>9. 第八阶段：数据飞轮与真实机器人规模化</h2>
+    <h2 id="section-09">9. 第八阶段：数据飞轮与真实机器人规模化</h2>
     <p>当策略已经能完成一部分任务，瓶颈转为“如何持续产生有价值的新数据”。数据飞轮通常包括：用遥操作或示范初始化策略；让策略自主 rollout；过滤成功、失败和异常轨迹；分析失败模式；针对失败样本重新训练；再回到真实机器人测试。</p>
     <p>DexFlyWheel 关注灵巧操作的数据生成和自我改进；RL-100 则把人类先验、真实机器人数据、离线 RL 和在线提升组织为一套可扩展流程。这类工作说明，真实世界 RL 的核心资产往往是可重复的数据闭环，而不是一次性的成功演示。</p>
     <p class="source-note"><a href="https://arxiv.org/abs/2509.23829">DexFlyWheel</a> · <a href="https://arxiv.org/abs/2510.14830">RL-100</a></p>
 
-    <h2>10. Flow-GRPO：扩散生成模型的在线 RL 分支</h2>
+    <h2 id="section-10">10. Flow-GRPO：扩散生成模型的在线 RL 分支</h2>
     <p>GRPO 对同一个条件采样一组结果，根据组内相对奖励加强较好的结果。Flow-matching 模型通常由确定性 ODE 采样，缺少 policy gradient 所需的随机转移。Flow-GRPO 将 ODE 转换为保持边际分布的 SDE，使每个去噪步骤具有可用于 RL 的随机概率，再把最终奖励分配回整条生成轨迹。</p>
     <p>它在图像生成中验证了“用在线 RL 对齐 flow model”的可行性，但仍需要处理反向轨迹、solver、概率比和逐步信用分配。这里的 reward 往往是图像美学、文字渲染或组合关系，与机器人成功率不是同一种证据。</p>
     <p class="source-note"><a href="https://arxiv.org/abs/2505.05470">Flow-GRPO 论文</a> · <a href="https://github.com/yifan123/flow_grpo">官方代码</a></p>
 
-    <h2>11. DiffusionNFT：forward-process 后训练</h2>
+    <h2 id="section-11">11. DiffusionNFT：forward-process 后训练</h2>
     <p>DiffusionNFT（Diffusion Negative-aware Fine-Tuning）尝试不把完整 reverse sampling trajectory 作为主要训练对象，而是在 forward diffusion / flow-matching 过程中比较高奖励和低奖励样本的预测误差。它的直觉是：奖励排序提供了一个正负方向，velocity field 可以像监督学习一样朝更好的样本移动。</p>
     <p>它相对 Flow-GRPO 的价值是减少对完整轨迹、似然估计和特定 sampler 的依赖，并支持黑盒 solver。但它目前的核心证据来自图像生成。迁移到具身控制时，clean image 要对应 action chunk，image reward 要改成成功率、距离、碰撞和能耗，正负样本要来自成功/失败 rollout；时间信用分配、动力学约束、安全过滤和 sim-to-real 都必须重新设计。</p>
     <p class="source-note"><a href="https://arxiv.org/abs/2509.16117">DiffusionNFT 论文</a> · <a href="https://github.com/NVlabs/DiffusionNFT">官方代码</a> · <a href="https://research.nvidia.com/labs/dir/DiffusionNFT">项目页</a></p>
 
-    <h2>12. 把整条路线放在一张表里</h2>
+    <h2 id="section-12">12. 把整条路线放在一张表里</h2>
     <table><thead><tr><th>阶段</th><th>策略学什么</th><th>RL 的作用</th><th>主要瓶颈</th></tr></thead><tbody>
       <tr><td>经典控制</td><td>低维状态到动作</td><td>从奖励学习控制规律</td><td>奖励、探索、样本效率</td></tr>
       <tr><td>深度 RL + 仿真</td><td>视觉策略和动力学控制</td><td>大规模并行探索</td><td>Sim-to-Real</td></tr>
@@ -80,8 +103,15 @@
       <tr><td>RL-100 类数据飞轮</td><td>可持续改进的真实策略</td><td>离线与在线混合提升</td><td>数据闭环规模和可靠性</td></tr>
     </tbody></table>
 
-    <h2>13. 初学者阅读顺序</h2>
+    <h2 id="section-13">13. 初学者阅读顺序</h2>
     <ol><li>先读 PPO 或 Spinning Up，理解 state、action、reward、return 和 policy。</li><li>再读 Sim-to-Real 与 The Ingredients of Real-World Robotic RL，理解为什么真实机器人不是普通 benchmark。</li><li>读 Diffusion Policy，理解动作 chunk 和多模态策略表示。</li><li>读 RT-2、OpenVLA、π<sub>0</sub>，理解 VLA 与动作头。</li><li>读 DexFlyWheel、RL-100，理解数据飞轮。</li><li>最后读 Flow-GRPO 和 DiffusionNFT，把它们看作“生成策略后训练”的新分支，并严格区分图像证据与机器人证据。</li></ol>
   </article>
+<nav class="related-notes" aria-label="相关笔记">
+  <p>继续阅读</p>
+  <ul>
+    <li><a href="embodied-intelligence.html">具身智能发展笔记 →</a></li>
+    <li><a href="../notes.html#embodied">返回具身智能与强化学习主题 →</a></li>
+  </ul>
+</nav>
   <footer><a class="footer-wordmark" href="../index.html">Jiajun<span>.</span></a><span>World Models · Embodied Intelligence</span><span><a href="../notes.html">Back to Notes ↗</a> · <a href="../index.html">Home ↗</a></span></footer>
 </main></body></html>
