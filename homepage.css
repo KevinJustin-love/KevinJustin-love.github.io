@@ -29,9 +29,9 @@ h1 { display:inline; margin:0; font:400 36px/1.25 Georgia,"Times New Roman","Son
 .contact-links { display:flex; flex-wrap:wrap; gap:4px 12px; margin-top:9px; font-size:13px; overflow-wrap:anywhere; }
 .contact-links a { text-decoration:none; }
 .contact-links span { color:var(--muted); }
-.portrait-card { grid-area:1 / 1; margin:0; padding:6px; background:var(--card); border:1px solid var(--line); }
-.portrait-backdrop { display:none; }
-.portrait-card img { display:block; width:100%; height:148px; object-fit:cover; object-position:center top; filter:saturate(.8); }
+.portrait-card { grid-area:1 / 1; margin:0; }
+.portrait-crop { width:100%; aspect-ratio:1; border-radius:50%; overflow:hidden; background:var(--card); }
+.portrait-card img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 30%; transform:scale(1.6); transform-origin:80% 19%; }
 figcaption { padding:7px 2px 1px; color:var(--muted); font-size:11px; text-align:center; }
 figcaption>span { display:block; }
 .status { color:var(--teal); }
@@ -83,12 +83,7 @@ h3 { margin:0 0 4px; font-size:15px; line-height:1.45; font-weight:600; }
 .education-card .section-note { font-size:11px; }
 .language-scores { color:var(--muted); }
 .language-scores span { margin:0 6px; }
-.award-feature { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; padding:7px 10px; border-left:2px solid var(--teal); background:#eaf0eb; }
-.award-feature .eyebrow { display:none; }
-.award-feature h3 { margin:0; color:var(--teal); font-size:15px; }
-.award-feature p { margin:0; color:var(--teal); font-size:12px; }
-.award-feature time { margin-left:auto; color:var(--muted); font-size:12px; }
-.award-list { margin:7px 0 0; padding-left:17px; font-size:12px; line-height:1.6; }
+.award-list { margin:0; padding-left:17px; font-size:12px; line-height:1.6; }
 .award-list li { padding:3px 0 3px 2px; }
 .award-list li::marker { color:var(--teal); }
 .notes-link { text-decoration:none; }
@@ -98,6 +93,6 @@ footer p { margin:0; }
 footer a { overflow-wrap:anywhere; }
 html[lang="zh-CN"] h1 { font-size:34px; letter-spacing:0; }
 html[lang="zh-CN"] h2,html[lang="zh-CN"] h3 { letter-spacing:0; }
-@media (max-width:800px) { .site-header { flex-wrap:wrap; gap:10px 18px; } nav { order:3; width:100%; justify-content:flex-start; margin:0; } .language-switch { margin-left:auto; } .credentials-grid { grid-template-columns:1fr; gap:0; } .hero { grid-template-columns:130px minmax(0,1fr); gap:22px; } .portrait-card img { height:118px; } }
-@media (max-width:600px) { main { padding:16px 18px 28px; } nav { gap:8px 16px; } .hero { position:relative; display:block; padding:22px 0 16px; } .hero-copy>.eyebrow { max-width:calc(100% - 88px); font-size:10px; } h1,html[lang="zh-CN"] h1 { display:block; margin-right:88px; font-size:29px; } .native-name { display:block; margin:3px 0 12px; font-size:12px; } .portrait-card { position:absolute; right:0; top:26px; width:76px; padding:4px; } .portrait-card img { height:66px; } figcaption { display:none; } .highlights { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 16px; padding:10px 0; } .highlight-value { font-size:17px; } .award-value { font-size:14px; } .highlight-label { font-size:11px; } h2 { font-size:21px; } .news-list li { grid-template-columns:1fr; gap:1px; padding:6px 0; } .news-date { font-size:12px; } .news-list p { font-size:14px; } .paper-card { grid-template-columns:1fr; gap:5px; } .paper-meta { flex-direction:row; align-items:center; gap:10px; } .detail-row { grid-template-columns:1fr; gap:4px; } .work-meta { flex-direction:row; flex-wrap:wrap; gap:4px 12px; } .interest-grid { grid-template-columns:1fr; gap:10px; } .authors,.paper-summary,.detail-row p,.interest-card p,.education-card p { font-size:14px; } .education-metrics { gap:8px; } .education-metrics dd { font-size:15px; } .award-list { font-size:13px; } footer .footer-wordmark { display:none; } }
+@media (max-width:800px) { .site-header { flex-wrap:wrap; gap:10px 18px; } nav { order:3; width:100%; justify-content:flex-start; margin:0; } .language-switch { margin-left:auto; } .credentials-grid { grid-template-columns:1fr; gap:0; } .hero { grid-template-columns:130px minmax(0,1fr); gap:22px; } }
+@media (max-width:600px) { main { padding:16px 18px 28px; } nav { gap:8px 16px; } .hero { position:relative; display:block; padding:22px 0 16px; } .hero-copy>.eyebrow { max-width:calc(100% - 88px); font-size:10px; } h1,html[lang="zh-CN"] h1 { display:block; margin-right:88px; font-size:29px; } .native-name { display:block; margin:3px 0 12px; font-size:12px; } .portrait-card { position:absolute; right:0; top:26px; width:76px; } figcaption { display:none; } .highlights { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 16px; padding:10px 0; } .highlight-value { font-size:17px; } .award-value { font-size:14px; } .highlight-label { font-size:11px; } h2 { font-size:21px; } .news-list li { grid-template-columns:1fr; gap:1px; padding:6px 0; } .news-date { font-size:12px; } .news-list p { font-size:14px; } .paper-card { grid-template-columns:1fr; gap:5px; } .paper-meta { flex-direction:row; align-items:center; gap:10px; } .detail-row { grid-template-columns:1fr; gap:4px; } .work-meta { flex-direction:row; flex-wrap:wrap; gap:4px 12px; } .interest-grid { grid-template-columns:1fr; gap:10px; } .authors,.paper-summary,.detail-row p,.interest-card p,.education-card p { font-size:14px; } .education-metrics { gap:8px; } .education-metrics dd { font-size:15px; } .award-list { font-size:13px; } footer .footer-wordmark { display:none; } }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
