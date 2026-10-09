@@ -22,6 +22,8 @@ The site uses static HTML and CSS, a warm paper background, and blue/teal accent
 
 The English and Chinese homepages link to each other through the header's **EN / 中文** switch. They introduce my school and email, research interests, News, publications and preprints, research experience, education and academic scores, honors and awards, selected projects, and the Notes directory.
 
+The homepages use compact academic typography (15px body text, a 36px name, and 22px section headings), a small profile image, publication rows with venue labels, and paired education/awards columns on desktop. On mobile, these columns stack and the portrait shrinks to keep the introduction and updates close to the top.
+
 Academic information follows my English and Chinese CVs. GPA is 3.97/4.30, major rank is 1/28, and the weighted average of 91.45/100 covers the first two academic years. Expected graduation is June 2028. Both listed papers are **submitted preprints**, with direct arXiv and PDF links; they are not listed as accepted publications. National Scholarship is highlighted without an unverified award year. There is no Google Scholar profile link.
 
 When updating academic content, update both language pages together and keep paper author order, contribution markers, submission status, and score scopes consistent. The two homepages share one stylesheet; existing Notes pages retain their shared cream theme.
