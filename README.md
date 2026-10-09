@@ -6,7 +6,9 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 
 | Path | Purpose |
 | --- | --- |
-| `index.html` | Personal homepage and research interests |
+| `index.html` | English academic homepage |
+| `index-zh.html` | Chinese academic homepage, with the same sections and facts |
+| `homepage.css` | Shared responsive cream theme for both homepages |
 | `notes.html` | Canonical Notes directory, grouped into four topics |
 | `notes/wam-vla.html` | WAM/VLA reading paths, cross-view guide, and 24 paper-note links |
 | `notes/embodied-intelligence.html`, `notes/embodied-rl.html` | Embodied AI and reinforcement learning articles |
@@ -15,6 +17,14 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 | `notes.css` | Shared article, directory, and topic-page styles |
 
 The site uses static HTML and CSS, a warm paper background, and blue/teal accents. It needs no build tools or external JavaScript libraries. Section navigation and collapsible reading lists work without JavaScript; the legacy redirects use a small inline script to preserve query strings and chapter fragments, with a meta-refresh and link fallback.
+
+## Academic homepage
+
+The English and Chinese homepages link to each other through the header's **EN / 中文** switch. They introduce my school and email, research interests, News, publications and preprints, research experience, education and academic scores, honors and awards, selected projects, and the Notes directory.
+
+Academic information follows my English and Chinese CVs. GPA is 3.97/4.30, major rank is 1/28, and the weighted average of 91.45/100 covers the first two academic years. Expected graduation is June 2028. Both listed papers are **submitted preprints**, with direct arXiv and PDF links; they are not listed as accepted publications. National Scholarship is highlighted without an unverified award year. There is no Google Scholar profile link.
+
+When updating academic content, update both language pages together and keep paper author order, contribution markers, submission status, and score scopes consistent. The two homepages share one stylesheet; existing Notes pages retain their shared cream theme.
 
 ## Notes and source material
 
@@ -44,7 +54,7 @@ From this directory, run:
 python -m http.server 8000
 ```
 
-Then open [localhost:8000/notes.html](http://localhost:8000/notes.html).
+Then open [the English homepage](http://localhost:8000/), [the Chinese homepage](http://localhost:8000/index-zh.html), or [Notes](http://localhost:8000/notes.html).
 
 ## Deployment
 
