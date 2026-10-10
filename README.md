@@ -27,7 +27,7 @@ The homepages use compact academic typography (15px body text, a 36px name, and 
 
 Academic information follows my English and Chinese CVs. Major rank is 1/28. Expected graduation is June 2028. Both listed papers are **submitted preprints**, with direct arXiv and PDF links; they are not listed as accepted publications. National Scholarship is dated September 2026. There is no Google Scholar profile link.
 
-Scholarships appear as individual award-list entries. Each language page uses its own award names without duplicating the translations. The personal portrait uses the supplied photo; The circular CSS frame uses a wider view of the subject, with the head occupying less space and the torso and arms visible.
+Scholarships appear as individual award-list entries. Each language page uses its own award names without duplicating the translations. The personal portrait uses the supplied photo, framed in a circle around the head, shoulders and upper chest.
 
 When updating academic content, update both language pages together and keep paper author order, contribution markers, submission status, and score scopes consistent. The two homepages share one stylesheet; existing Notes pages retain their shared cream theme.
 
