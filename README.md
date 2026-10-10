@@ -10,6 +10,7 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 | `index-zh.html` | Chinese academic homepage, with the same sections and facts |
 | `homepage.css` | Shared responsive cream theme for both homepages |
 | `assets/profile-body.jpg` | Original personal photo, framed as a circle with CSS |
+| `assets/favicon.png`, `assets/favicon.ico` | Cat favicon shared by every browser tab |
 | `notes.html` | Canonical Notes directory, grouped into four topics |
 | `notes/wam-vla.html` | WAM/VLA reading paths, cross-view guide, and 24 paper-note links |
 | `notes/embodied-intelligence.html`, `notes/embodied-rl.html` | Embodied AI and reinforcement learning articles |
@@ -18,6 +19,8 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 | `notes.css` | Shared article, directory, and topic-page styles |
 
 The site uses static HTML and CSS, a warm paper background, and blue/teal accents. It needs no build tools or external JavaScript libraries. Section navigation and collapsible reading lists work without JavaScript; the legacy redirects use a small inline script to preserve query strings and chapter fragments, with a meta-refresh and link fallback.
+
+The browser tabs show **Jiajun Peng (彭佳俊) | USTC** in English and **彭佳俊 (Jiajun Peng) | USTC** in Chinese. All Notes pages share the same favicon and retain their article titles. The cat favicon is a square portrait derived from my supplied cat photograph, with 16/32/48px ICO variants and a 32px PNG for browser tabs.
 
 ## Academic homepage
 
@@ -41,7 +44,7 @@ When updating academic content, update both language pages together and keep pap
 
 ### Adding or updating a note
 
-1. Add a readable HTML page under `notes/`, using `../notes.css` and the shared header/footer pattern.
+1. Add a readable HTML page under `notes/`, using `../notes.css`, `../assets/favicon.ico` and `../assets/favicon.png` as the favicon, and the shared header/footer pattern.
 2. Use one page-level `h1`, stable IDs on section headings, and a matching static chapter directory.
 3. Add the note to the appropriate topic in `notes.html`, with a short description and a meaningful reading order.
 4. For WAM/VLA, update the Markdown source in `pjj-learning-notes/wam-vla/`, then update the topic page's links and paper count when needed.
