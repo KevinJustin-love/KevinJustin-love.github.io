@@ -9,7 +9,7 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 | `index.html` | English academic homepage |
 | `index-zh.html` | Chinese academic homepage, with the same sections and facts |
 | `homepage.css` | Shared responsive cream theme for both homepages |
-| `assets/profile.png` | Original personal photo, framed as a circle with CSS |
+| `assets/profile-body.jpg` | Original personal photo, framed as a circle with CSS |
 | `notes.html` | Canonical Notes directory, grouped into four topics |
 | `notes/wam-vla.html` | WAM/VLA reading paths, cross-view guide, and 24 paper-note links |
 | `notes/embodied-intelligence.html`, `notes/embodied-rl.html` | Embodied AI and reinforcement learning articles |
@@ -27,7 +27,7 @@ The homepages use compact academic typography (15px body text, a 36px name, and 
 
 Academic information follows my English and Chinese CVs. Major rank is 1/28. Expected graduation is June 2028. Both listed papers are **submitted preprints**, with direct arXiv and PDF links; they are not listed as accepted publications. National Scholarship is dated September 2026. There is no Google Scholar profile link.
 
-Scholarships appear as individual award-list entries. Each language page uses its own award names without duplicating the translations. The personal portrait uses the supplied photo; CSS centers the circular frame on the subject and excludes bystanders from the visible crop.
+Scholarships appear as individual award-list entries. Each language page uses its own award names without duplicating the translations. The personal portrait uses the supplied photo; The circular CSS frame uses a wider view of the subject, with the head occupying less space and the torso and arms visible.
 
 When updating academic content, update both language pages together and keep paper author order, contribution markers, submission status, and score scopes consistent. The two homepages share one stylesheet; existing Notes pages retain their shared cream theme.
 

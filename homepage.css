@@ -31,7 +31,7 @@ h1 { display:inline; margin:0; font:400 36px/1.25 Georgia,"Times New Roman","Son
 .contact-links span { color:var(--muted); }
 .portrait-card { grid-area:1 / 1; margin:0; }
 .portrait-crop { width:100%; aspect-ratio:1; border-radius:50%; overflow:hidden; background:var(--card); }
-.portrait-card img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 30%; transform:scale(1.6); transform-origin:80% 19%; }
+.portrait-card img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 90%; }
 figcaption { padding:7px 2px 1px; color:var(--muted); font-size:11px; text-align:center; }
 figcaption>span { display:block; }
 .status { color:var(--teal); }
