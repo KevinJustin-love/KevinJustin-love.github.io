@@ -11,7 +11,7 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 | `homepage.css`, `academic.css` | Responsive academic layout for both homepages |
 | `theme.css` | Shared white and violet theme for homepages and Notes |
 | `homepage.js` | Progressive section navigation highlighting |
-| `assets/research-*.svg` | Original illustrative research-topic thumbnails |
+| `assets/formulabank-fig1.png`, `assets/dsr-fig1.png` | Figure 1 from the corresponding arXiv papers |
 | `assets/profile-body.jpg` | Original personal photo, framed as a circle with CSS |
 | `assets/favicon.png`, `assets/favicon.ico` | Cat favicon shared by every browser tab |
 | `notes.html` | Canonical Notes directory, grouped into four topics |
@@ -73,4 +73,4 @@ GitHub Pages publishes from `main` at the repository root. After pushing, check 
 
 ## Design reference
 
-The layout and visual direction are inspired by [Anleeno Academic](https://github.com/Anleeno/anleeno-academic): a profile sidebar, compact publication rows, soft violet accents and timeline entries. This site retains its existing static HTML architecture, bilingual academic content, personal media, Notes routes and GitHub Pages deployment. No personal content or media from the reference is reused. The research thumbnails are original illustrative schematics, not paper figures or experimental results.
+The layout and visual direction are inspired by [Anleeno Academic](https://github.com/Anleeno/anleeno-academic): a profile sidebar, compact publication rows, soft violet accents and timeline entries. This site retains its existing static HTML architecture, bilingual academic content, personal media, Notes routes and GitHub Pages deployment. No personal content or media from the reference is reused. Publication thumbnails use Figure 1 from each original arXiv paper. Sources and extraction details are recorded in `assets/README.md`.
