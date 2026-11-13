@@ -9,7 +9,7 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 | `index.html` | English academic homepage |
 | `index-zh.html` | Chinese academic homepage, with the same sections and facts |
 | `homepage.css`, `academic.css` | Responsive academic layout for both homepages |
-| `theme.css` | Shared warm off-white and violet theme for homepages and Notes |
+| `theme.css` | Shared white and violet theme for homepages and Notes |
 | `homepage.js` | Progressive section navigation highlighting |
 | `assets/research-*.svg` | Original illustrative research-topic thumbnails |
 | `assets/profile-body.jpg` | Original personal photo, framed as a circle with CSS |
@@ -21,7 +21,7 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 | `notes/codex.html`, `notes/claude-code.html` | Developer tool guides |
 | `notes.css` | Shared article, directory, and topic-page styles |
 
-The site uses static HTML and CSS, a warm paper background, and blue/teal accents. It needs no build tools or external JavaScript libraries. Section navigation and collapsible reading lists work without JavaScript; the legacy redirects use a small inline script to preserve query strings and chapter fragments, with a meta-refresh and link fallback.
+The site uses static HTML and CSS, a pure white background, and blue/teal accents. It needs no build tools or external JavaScript libraries. Section navigation and collapsible reading lists work without JavaScript; the legacy redirects use a small inline script to preserve query strings and chapter fragments, with a meta-refresh and link fallback.
 
 The browser tabs show **Jiajun Peng (彭佳俊) | USTC** in English and **彭佳俊 (Jiajun Peng) | USTC** in Chinese. All Notes pages share the same favicon and retain their article titles. The cat favicon is a square portrait derived from my supplied cat photograph, with 16/32/48px ICO variants and a 32px PNG for browser tabs.
 

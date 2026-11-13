@@ -1,5 +1,5 @@
 /* Shared palette; keep reading pages and both homepages coordinated. */
-:root { color-scheme:light; --paper:#faf9f6; --ink:#272735; --muted:#626270; --blue:#505a97; --teal:#58609b; --line:#e1e0e9; --card:#fff; --accent:#58609b; --accent-hover:#5748a4; --accent-soft:#eeedf6; --shadow:0 10px 40px rgb(55 51 91 / 5%); }
+:root { color-scheme:light; --paper:#fff; --ink:#272735; --muted:#626270; --blue:#505a97; --teal:#58609b; --line:#e1e0e9; --card:#fff; --accent:#58609b; --accent-hover:#5748a4; --accent-soft:#eeedf6; --shadow:0 10px 40px rgb(55 51 91 / 5%); }
 html { scroll-behavior:smooth; scroll-padding-top:100px; }
 body { background:var(--paper); color:var(--ink); }
 a { text-underline-offset:3px; }
