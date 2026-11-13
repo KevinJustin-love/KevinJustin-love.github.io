@@ -8,7 +8,10 @@ Source for [kevinjustin-love.github.io](https://kevinjustin-love.github.io/), a 
 | --- | --- |
 | `index.html` | English academic homepage |
 | `index-zh.html` | Chinese academic homepage, with the same sections and facts |
-| `homepage.css` | Shared responsive cream theme for both homepages |
+| `homepage.css`, `academic.css` | Responsive academic layout for both homepages |
+| `theme.css` | Shared warm off-white and violet theme for homepages and Notes |
+| `homepage.js` | Progressive section navigation highlighting |
+| `assets/research-*.svg` | Original illustrative research-topic thumbnails |
 | `assets/profile-body.jpg` | Original personal photo, framed as a circle with CSS |
 | `assets/favicon.png`, `assets/favicon.ico` | Cat favicon shared by every browser tab |
 | `notes.html` | Canonical Notes directory, grouped into four topics |
@@ -26,13 +29,13 @@ The browser tabs show **Jiajun Peng (彭佳俊) | USTC** in English and **彭佳
 
 The English and Chinese homepages link to each other through the header's **EN / 中文** switch. They introduce my school and email, research interests, News, publications and preprints, research experience, education and academic scores, honors and awards, selected projects, and the Notes directory.
 
-The homepages use compact academic typography (15px body text, a 36px name, and 22px section headings), a small profile image, publication rows with venue labels, and paired education/awards columns on desktop. On mobile, these columns stack and the portrait shrinks to keep the introduction and updates close to the top.
+The homepages use a sticky profile column and a compact reading column, a translucent floating navigation bar, muted violet accents, publication thumbnails and pill links, and research timelines. On tablet and mobile, the profile becomes a compact introduction above the content. Navigation can scroll horizontally on narrow screens. Motion respects the reduced-motion preference; all links work without JavaScript.
 
 Academic information follows my English and Chinese CVs. Major rank is 1/28. Expected graduation is June 2028. Both listed papers are **submitted preprints**, with direct arXiv and PDF links; they are not listed as accepted publications. National Scholarship is dated September 2026. There is no Google Scholar profile link.
 
 Scholarships appear as individual award-list entries. Each language page uses its own award names without duplicating the translations. The personal portrait uses the supplied photo, framed in a circle around the head, shoulders and upper chest.
 
-When updating academic content, update both language pages together and keep paper author order, contribution markers, submission status, and score scopes consistent. The two homepages share one stylesheet; existing Notes pages retain their shared cream theme.
+When updating academic content, update both language pages together and keep paper author order, contribution markers, submission status, and score scopes consistent. The two homepages share the same stylesheets and navigation script; Notes pages share the same palette and use a dedicated reading layout.
 
 ## Notes and source material
 
@@ -67,3 +70,7 @@ Then open [the English homepage](http://localhost:8000/), [the Chinese homepage]
 ## Deployment
 
 GitHub Pages publishes from `main` at the repository root. After pushing, check the Pages build and deployment before assuming the public site has updated.
+
+## Design reference
+
+The layout and visual direction are inspired by [Anleeno Academic](https://github.com/Anleeno/anleeno-academic): a profile sidebar, compact publication rows, soft violet accents and timeline entries. This site retains its existing static HTML architecture, bilingual academic content, personal media, Notes routes and GitHub Pages deployment. No personal content or media from the reference is reused. The research thumbnails are original illustrative schematics, not paper figures or experimental results.
